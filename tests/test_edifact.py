@@ -34,8 +34,8 @@ class Test_datamatrix_edifact(unittest.TestCase):
         with self.assertRaises(ValueError):
             code.decode('datamatrix.edifact')
 
-    def test_encode_to_datamatrix(self):
-        """Verify that encoding to datamatrix works."""
+    def test_encode_to_square_datamatrix(self):
+        """Verify that encoding to square datamatrix works."""
         for i in range(len(EDIFACT)):
             if 2 * i > len(EDIFACT):
                 msg = EDIFACT[i:] + EDIFACT[:3 * i - len(EDIFACT)]
@@ -46,6 +46,20 @@ class Test_datamatrix_edifact(unittest.TestCase):
             datamatrix = put.DataMatrix(msg)
 
             self.assertTrue(len(datamatrix.matrix) > 0)
+
+    def test_encode_to_rect_datamatrix(self):
+        """Verify that encoding to rectangular datamatrix works."""
+        for i in range(len(EDIFACT)):
+            if 2 * i > len(EDIFACT):
+                msg = EDIFACT[i:] + EDIFACT[:3 * i - len(EDIFACT)]
+            else:
+                msg = EDIFACT[i:2 * i]
+
+            # assert that this does not raise:
+            datamatrix = put.DataMatrix(msg, rct=True)
+
+            m = datamatrix.matrix
+            self.assertTrue(len(m) > 0)
 
     def test_encode_known(self):
         """Encode and verify correctness."""

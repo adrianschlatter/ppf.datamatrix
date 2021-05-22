@@ -96,12 +96,20 @@ class Test_CornerCases(unittest.TestCase):
         datamatrix = put.DataMatrix('A' * 230)
         self.assertTrue(len(datamatrix.matrix) > 0)
 
-    def test_long_message(self):
+    def test_long_square_message(self):
         """Test very long messages for same behavior as datamatrix-svg."""
         m = put.DataMatrix('~' * 1558).matrix
         self.assertTrue(len(m) > 0)
         with self.assertRaises(ValueError):
             m = put.DataMatrix('~' * 1559).matrix
+
+    def test_long_rect_message(self):
+        """Test very long rect messages for same behavior as datamatrix-svg."""
+        m = put.DataMatrix('~' * 49, rct=True).matrix
+        self.assertTrue(len(m) < len(m[0]))
+
+        m = put.DataMatrix('~' * 50, rct=True).matrix
+        self.assertTrue(len(m) == len(m[0]))
 
     @unittest.skip
     def test_random_messages(self):

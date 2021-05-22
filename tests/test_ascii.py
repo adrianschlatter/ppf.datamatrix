@@ -46,6 +46,19 @@ class Test_datamatrix_ascii(unittest.TestCase):
 
             self.assertTrue(len(datamatrix.matrix) > 0)
 
+    def test_encode_to_rect_datamatrix(self):
+        """Verify that encoding to datamatrix works."""
+        for i in range(len(ASCII)):
+            if 2 * i > len(ASCII):
+                msg = ASCII[i:] + ASCII[:3 * i - len(ASCII)]
+            else:
+                msg = ASCII[i:2 * i]
+
+            # assert that this does not raise:
+            datamatrix = put.DataMatrix(msg, rct=True)
+
+            self.assertTrue(len(datamatrix.matrix) > 0)
+
 
 if __name__ == '__main__':
     # This enables running the unit tests by running this script which is

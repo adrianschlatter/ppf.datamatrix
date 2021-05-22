@@ -15,10 +15,8 @@ import ppf.datamatrix as put
 class Test_A(unittest.TestCase):
     """Test simple edifact datamatrix."""
 
-    def setUp(self):
-        self.dm = put.DataMatrix('A')
-
-    def test_matrix(self):
+    def test_square_matrix(self):
+        dm = put.DataMatrix('A', rct=False)
         truth = [[1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
                  [1, 1, 0, 1, 1, 0, 0, 0, 1, 1],
                  [1, 0, 0, 0, 1, 1, 0, 1, 0, 0],
@@ -29,7 +27,20 @@ class Test_A(unittest.TestCase):
                  [1, 1, 0, 0, 1, 1, 1, 1, 0, 1],
                  [1, 1, 0, 0, 0, 0, 1, 0, 0, 0],
                  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
-        self.assertEqual(self.dm.matrix, truth)
+        self.assertEqual(dm.matrix, truth)
+
+    def test_rect_matrix(self):
+        """Test that rectangular matrix is not square."""
+        dm = put.DataMatrix('~', rct=True)
+        truth = [[1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+                 [1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1],
+                 [1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0],
+                 [1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1],
+                 [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0],
+                 [1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1],
+                 [1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0],
+                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+        self.assertTrue(dm.matrix, truth)
 
 
 if __name__ == '__main__':

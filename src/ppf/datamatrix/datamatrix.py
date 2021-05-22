@@ -14,7 +14,7 @@ from .utils import export
 svg_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
-    'height="{size}px" width="{size}px" ' \
+    'height="{height}px" width="{width}px" ' \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
@@ -30,8 +30,9 @@ class DataMatrix():
     Currently supports EDIFACT messages and nothing more.
     """
 
-    def __init__(self, msg):
+    def __init__(self, msg, rct=False):
         self._msg = msg
+        self._rct = rct
 
     def __repr__(self):
         return f"DataMatrix('{self._msg}')"
@@ -40,14 +41,16 @@ class DataMatrix():
         return self.svg(bg='#000', fg='#FFF')
 
     def _svg_path_iterator(self):
-        size = len(self.matrix)
+        mat = self.matrix
+        h = len(mat)
+        w = len(mat[0])
 
-        for line in self.matrix:
+        for line in mat:
             i = 0
-            while(i < size):
+            while(i < w):
                 color = line[i]
                 i0 = i
-                while(i < size and line[i] == color):
+                while(i < w and line[i] == color):
                     i = i + 1
 
                 length = i - i0
@@ -58,12 +61,15 @@ class DataMatrix():
                     yield 'm'
                     yield f'{length},0'
             yield 'm'
-            yield f'{-size},1'
+            yield f'{-w},1'
 
     def svg(self, fg='#000', bg='#FFF'):
         cmds = ''.join(self._svg_path_iterator())
+        mat = self.matrix
+        height = len(mat) + 2
+        width = len(mat[0]) + 2
         return svg_template.format(fg=fg, bg=bg, path_cmds=cmds,
-                                   size=len(self.matrix) + 2)
+                                   height=height, width=width)
 
     @property
     def message(self):
@@ -71,7 +77,7 @@ class DataMatrix():
 
     @property
     def matrix(self):
-        rct = False
+        rct = self._rct
 
         def bit(x, y):
             M[y] = M.get(y, {})
@@ -99,33 +105,51 @@ class DataMatrix():
         lg = [0] * 256  # log / exp table for multiplication
         ex = [0] * 255
 
-        if not rct:  # square code
+        if rct and el < 50:  # rectangular code
+            # symbol width, checkwords
+            k = [16, 7, 28, 11, 24, 14, 32, 18, 32, 24, 44, 28]
+
+            while True:
+                j += 1
+                w = k[j]  # width
+                h = 6 + (j & 12)  # height
+                l = w * h // 8  # bytes count in symbol
+
+                j += 1
+                if l - k[j] >= el:  # could we fill the rect?
+                    break
+
+            # column regions
+            if (w > 25):
+                nc = 2
+
+        else:  # square code
             w = h = 6
             i = 2     # size increment
             # rs checkwords
             k = [5, 7, 10, 12, 14, 18, 20, 24, 28, 36, 42, 48, 56, 68,
                  84, 112, 144, 192, 224, 272, 336, 408, 496, 620]
 
-        l = 0
-        while True:
-            j += 1
-            if j == len(k):
-                raise ValueError('Message is too long')
+            l = 0
+            while True:
+                j += 1
+                if j == len(k):
+                    raise ValueError('Message is too long')
 
-            if(w > 11 * i):
-                i = 4 + i & 12  # advance increment
+                if(w > 11 * i):
+                    i = 4 + i & 12  # advance increment
 
-            h += i
-            w = h
-            l = (w * h) >> 3
+                h += i
+                w = h
+                l = (w * h) >> 3
 
-            if l - k[j] >= el:
-                break
+                if l - k[j] >= el:
+                    break
 
-        if(w > 27):
-            nr = nc = 2 * (w // 54 | 0) + 2  # regions
-        if(l > 255):
-            b = 2 * (l >> 9) + 2            # blocks
+            if(w > 27):
+                nr = nc = 2 * (w // 54 | 0) + 2  # regions
+            if(l > 255):
+                b = 2 * (l >> 9) + 2            # blocks
 
         s = k[j]        # rs checkwords
         fw = w // nc     # region size
@@ -311,10 +335,11 @@ class DataMatrix():
             i -= 1
 
         matrix = []
-        size = len(M)
-        for j in range(size):
+        rows = h + 2 * nr
+        cols = w + 2 * nc
+        for j in range(rows):
             matrix.append([])
-            for i in range(size):
+            for i in range(cols):
                 x = M[j].get(i, 0)
                 matrix[j].append(M[j].get(i, 0))
 
