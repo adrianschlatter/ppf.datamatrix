@@ -103,39 +103,7 @@ class DataMatrix():
 
     @property
     def edifact(self):
-        msg = self._msg
-
-        n = len(msg)
-        l = (n + 1) & -4
-        cw = 0
-        r = [[], [240]][l > 0]  # switch to Edifact
-
-        for i in range(l):
-            if i < l - 1:
-                # encode char
-                ch = ord(msg[i])
-                if ch < 32 or ch > 94:
-                    return []   # not in set
-            else:
-                ch = 31         # return to ASCII
-
-            cw = cw * 64 + (ch & 63)
-
-            if (i & 3) == 3:
-                # 4 data in 3 words
-                r.append(cw >> 16)
-                r.append(cw >> 8 & 255)
-                r.append(cw & 255)
-                cw = 0
-
-        if l <= n:
-            if l == 0:
-                substr = msg
-            else:
-                substr = msg[l - 1:]
-            r += self._to_ascii(substr)
-
-        return r
+        return self._msg.encode('datamatrix.edifact')
 
     @property
     def matrix(self):
