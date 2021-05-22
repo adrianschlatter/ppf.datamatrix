@@ -6,7 +6,9 @@ Unittests
 """
 
 import unittest
+import random
 import ppf.datamatrix as put
+
 
 # Datamatrix has the following encodings:
 # TEXT, C40, X12, EDIFACT, BASE256
@@ -39,7 +41,7 @@ class Smoke_Test(object):
 
     def test_properties(self):
         """Access each property and test for exceptions."""
-        props = ['message', 'ascii', 'edifact', 'matrix']
+        props = ['message', 'matrix']
 
         for prop in props:
             try:
@@ -77,6 +79,38 @@ class Test_BASE256(Smoke_Test, unittest.TestCase):
             self.dm = put.DataMatrix(BASE256)
         except:     # noqa: E722
             self.fail('Exception upon valid instantiation')
+
+
+class Test_CornerCases(unittest.TestCase):
+    """Test corner cases such as rarely used branches etc."""
+
+    def test_corner_B_omit_upper_left_loop_exit(self):
+        """Test said branch of code to avoid endless loop."""
+        msg = ')*+,-./01'
+        # make sure that this does not go into endless loop:
+        datamatrix = put.DataMatrix(msg)
+        self.assertTrue(len(datamatrix.matrix) > 0)
+
+    def test_l_greater_255_blocks(self):
+        """Test branch l>255 #blocks in DataMatrix.matrix property."""
+        datamatrix = put.DataMatrix('A' * 230)
+        self.assertTrue(len(datamatrix.matrix) > 0)
+
+    def test_long_message(self):
+        """Test very long messages for same behavior as datamatrix-svg."""
+        m = put.DataMatrix('~' * 1558).matrix
+        self.assertTrue(len(m) > 0)
+        with self.assertRaises(ValueError):
+            m = put.DataMatrix('~' * 1559).matrix
+
+    @unittest.skip
+    def test_random_messages(self):
+        """Test random messages."""
+        while True:
+            n = random.randint(0, 1024)
+            msg = ''.join(random.choices(ASCII, k=n))
+            datamatrix = put.DataMatrix(msg)
+            self.assertTrue(len(datamatrix.matrix) > 0)
 
 
 if __name__ == '__main__':

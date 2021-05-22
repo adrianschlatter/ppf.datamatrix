@@ -23,7 +23,6 @@ class Test_datamatrix_ascii(unittest.TestCase):
                 msg = ASCII[i:] + ASCII[:3 * i - len(ASCII)]
             else:
                 msg = ASCII[i:2 * i]
-            print(f'{i}: "{msg}"')
 
             code = msg.encode('datamatrix.ascii')
             decoded = code.decode('datamatrix.ascii')
@@ -33,6 +32,19 @@ class Test_datamatrix_ascii(unittest.TestCase):
         """Encode and verify correctness."""
         code = 'A'.encode('datamatrix.ascii')
         self.assertEqual(code, b'B')
+
+    def test_encode_to_datamatrix(self):
+        """Verify that encoding to datamatrix works."""
+        for i in range(len(ASCII)):
+            if 2 * i > len(ASCII):
+                msg = ASCII[i:] + ASCII[:3 * i - len(ASCII)]
+            else:
+                msg = ASCII[i:2 * i]
+
+            # assert that this does not raise:
+            datamatrix = put.DataMatrix(msg)
+
+            self.assertTrue(len(datamatrix.matrix) > 0)
 
 
 if __name__ == '__main__':

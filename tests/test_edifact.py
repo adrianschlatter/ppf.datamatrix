@@ -16,18 +16,36 @@ EDIFACT = bytes(range(32, 95)).decode('ascii')
 class Test_datamatrix_edifact(unittest.TestCase):
     """Test codecs datamatrix.edifact."""
 
-    def test_consistency(self):
+    def test_encode_decode(self):
         """Verify that coding + decoding return the original message."""
         for i in range(len(EDIFACT)):
             if 2 * i > len(EDIFACT):
                 msg = EDIFACT[i:] + EDIFACT[:3 * i - len(EDIFACT)]
             else:
                 msg = EDIFACT[i:2 * i]
-            print(f'{i}: "{msg}"')
 
             code = msg.encode('datamatrix.edifact')
             decoded = code.decode('datamatrix.edifact')
             self.assertEqual(decoded, msg)
+
+    def test_raises(self):
+        """Verify that error is raised for invalid EDIFACT."""
+        code = bytes([0])
+        with self.assertRaises(ValueError):
+            code.decode('datamatrix.edifact')
+
+    def test_encode_to_datamatrix(self):
+        """Verify that encoding to datamatrix works."""
+        for i in range(len(EDIFACT)):
+            if 2 * i > len(EDIFACT):
+                msg = EDIFACT[i:] + EDIFACT[:3 * i - len(EDIFACT)]
+            else:
+                msg = EDIFACT[i:2 * i]
+
+            # assert that this does not raise:
+            datamatrix = put.DataMatrix(msg)
+
+            self.assertTrue(len(datamatrix.matrix) > 0)
 
     def test_encode_known(self):
         """Encode and verify correctness."""

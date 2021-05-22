@@ -69,42 +69,6 @@ class DataMatrix():
     def message(self):
         return self._msg
 
-    @staticmethod
-    def _to_ascii(msg):
-        r = []
-
-        i = 0
-        while True:
-            if not i < len(msg):
-                break
-
-            c = ord(msg[i])
-            if i + 1 < len(msg):
-                c1 = ord(msg[i + 1])
-            else:
-                c1 = 0
-
-            if c > 47 and c < 58 and c1 > 47 and c1 < 58:  # 2 digits
-                r.append((c - 48) * 10 + c1 + 82)  # - 48 + 130 = 82
-                i += 1
-            elif c > 127:  # extended char
-                r.append(235)
-                r.append((c - 127) & 255)
-            else:
-                r.append(c + 1)  # char
-
-            i += 1
-
-        return r
-
-    @property
-    def ascii(self):
-        return self._to_ascii(self._msg)
-
-    @property
-    def edifact(self):
-        return self._msg.encode('datamatrix.edifact')
-
     @property
     def matrix(self):
         rct = False
@@ -115,7 +79,13 @@ class DataMatrix():
 
         # unescape( encodeURI( text ) );
         M = {}
-        enc = self.edifact
+        enc = []
+        for codec in ['datamatrix.ascii', 'datamatrix.edifact']:
+            try:
+                enc.append(self._msg.encode(codec))
+            except ValueError:
+                pass
+        enc = min(enc, key=len)
         enc = {i: c for i, c in enumerate(enc)}
         el = len(enc)
 
@@ -139,8 +109,8 @@ class DataMatrix():
         l = 0
         while True:
             j += 1
-            # if j == len(k):
-            #     return [0, 0]  # msg is too long
+            if j == len(k):
+                raise ValueError('Message is too long')
 
             if(w > 11 * i):
                 i = 4 + i & 12  # advance increment
@@ -149,13 +119,13 @@ class DataMatrix():
             w = h
             l = (w * h) >> 3
 
-            if(w > 27):
-                nr = nc = 2 * (w // 54 | 0) + 2  # regions
-            if(l > 255):
-                b = 2 * (l >> 9) + 2            # blocks
-
             if l - k[j] >= el:
                 break
+
+        if(w > 27):
+            nr = nc = 2 * (w // 54 | 0) + 2  # regions
+        if(l > 255):
+            b = 2 * (l >> 9) + 2            # blocks
 
         s = k[j]        # rs checkwords
         fw = w // nc     # region size
@@ -168,7 +138,7 @@ class DataMatrix():
 
         # more padding
         while(el < l - s):
-            enc[el] = (((149 * el) % 253) + 130) % 254
+            enc[el] = (((149 * (el + 1)) % 253) + 130) % 254
             el += 1
 
         # Reed Solomon error detection and correction
@@ -263,6 +233,8 @@ class DataMatrix():
                     -1,     -2]
             else:
                 if r == 0 and c == w - 2 and (w & 3):
+                    r -= s
+                    c += s
                     continue   # corner B: omit upper left
                 if r < 0 or c >= w or r >= h or c < 0:  # outside
                     s = -s     # turn around
@@ -294,6 +266,8 @@ class DataMatrix():
                         0,     0,
                         0,    -1]
                 elif r == 1 and c == w - 1 and (w & 7) == 0 and (h & 7) == 6:
+                    r -= s
+                    c += s
                     continue    # omit corner D
                 else:
                     k = b       # nominal L - shape layout
