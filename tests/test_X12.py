@@ -8,11 +8,10 @@ Verify that datamatrix.X12 codec works as expected
 """
 
 import unittest
+from .common import X12
 # Following import needed to register X12 codec, even though 'put' not
 # referenced in code:
 import ppf.datamatrix as put  # noqa: F401
-
-X12 = '\r*> 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 
 class Test_datamatrix_X12(unittest.TestCase):

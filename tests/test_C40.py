@@ -8,12 +8,10 @@ Verify that datamatrix.C40 codec works as expected
 """
 
 import unittest
+from .common import ASCII
 # Following import needed to register C40 codec, even though 'put' not
 # referenced in code:
 import ppf.datamatrix as put  # noqa: F401
-
-# C40 is able to encode any ASCII-character:
-ASCII = bytes(range(128)).decode('ascii')
 
 
 class Test_datamatrix_C40(unittest.TestCase):

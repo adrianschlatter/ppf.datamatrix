@@ -8,9 +8,8 @@ Verify that datamatrix.edifact codec works as expected
 """
 
 import unittest
+from .common import EDIFACT
 import ppf.datamatrix as put
-
-EDIFACT = bytes(range(32, 95)).decode('ascii')
 
 
 class Test_datamatrix_edifact(unittest.TestCase):

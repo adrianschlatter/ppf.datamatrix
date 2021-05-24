@@ -8,12 +8,10 @@ Verify that datamatrix.text codec works as expected
 """
 
 import unittest
+from .common import ASCII
 # Following import needed to register text codec, even though 'put' not
 # referenced in code:
 import ppf.datamatrix as put  # noqa: F401
-
-# text is able to encode any ASCII-character:
-ASCII = bytes(range(128)).decode('ascii')
 
 
 class Test_datamatrix_text(unittest.TestCase):

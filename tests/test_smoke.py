@@ -7,19 +7,8 @@ Unittests
 
 import unittest
 import random
+from .common import ASCII, X12, EDIFACT, BASE256
 import ppf.datamatrix as put
-
-
-# Datamatrix has the following encodings:
-# TEXT, C40, X12, EDIFACT, BASE256
-# TEXT and C40 both encode the entire ASCII character table (in a
-# different way).
-# X12 and EDIFACT are subsets of ASCII characters.
-# BASE256 is the (binary) 8-bit alphabet.
-ASCII = ''.join([chr(i) for i in range(128)])
-X12 = '\r*> 01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-EDIFACT = ''.join([chr(i) for i in range(32, 95)])
-BASE256 = bytes(range(256))
 
 
 class Smoke_Test(object):

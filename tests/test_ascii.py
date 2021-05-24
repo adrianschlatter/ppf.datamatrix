@@ -9,8 +9,7 @@ Verify that datamatrix.ascii codec works as expected
 
 import unittest
 import ppf.datamatrix as put
-
-ASCII = ''.join([chr(i) for i in range(128)])
+from .common import ASCII
 
 
 class Test_datamatrix_ascii(unittest.TestCase):
