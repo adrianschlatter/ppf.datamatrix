@@ -7,7 +7,7 @@ Unittests
 
 import unittest
 import random
-from .common import ASCII, X12, EDIFACT, BASE256
+from .common import ASCII, EDIFACT, BASE256
 import ppf.datamatrix as put
 
 
