@@ -86,11 +86,13 @@ class DataMatrix():
         # unescape( encodeURI( text ) );
         M = {}
         enc = []
-        for codec in ['datamatrix.ascii', 'datamatrix.edifact']:
+        for codec in ['datamatrix.ascii', 'datamatrix.edifact',
+                      'datamatrix.C40', 'datamatrix.text', 'datamatrix.X12']:
             try:
                 enc.append(self._msg.encode(codec))
             except ValueError:
                 pass
+
         enc = min(enc, key=len)
         enc = {i: c for i, c in enumerate(enc)}
         el = len(enc)
