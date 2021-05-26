@@ -34,6 +34,14 @@ class Test_datamatrix_X12(unittest.TestCase):
         code = 'A'.encode('datamatrix.X12')
         self.assertEqual(code, b'\xEE\xFEB')
 
+    def test_encode_X12(self):
+        """Encode entire alphabet and compare to datamatrix-svg."""
+        # Ooops, datamatrix-svg fails at '>'. Test without '>'
+        X12_ = '\r* 01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        code = X12_.encode('datamatrix.X12')
+        self.assertEqual(code, b'\xee\x00,\x19\xcf-\n@EQ\xef`Rs\x8d\x86\xc8'
+                         b'\x9a\x03\xad>\xc0y\xd3\xb4\xe6\xef\xfe[')
+
 
 if __name__ == '__main__':
     # This enables running the unit tests by running this script which is
