@@ -62,8 +62,27 @@ class Test_datamatrix_edifact(unittest.TestCase):
 
     def test_encode_known(self):
         """Encode and verify correctness."""
-        code = 'A'.encode('datamatrix.edifact')
-        self.assertEqual(code, b'\xf0\x1fB')
+        enc = 'A'.encode('datamatrix.edifact')
+        self.assertEqual(enc, b'\xf0\x05\xf0\x00')
+
+    def test_31(self):
+        """
+        Encode  msg resulting in EDIFACT [240, 31, 31, 31].
+
+        Note: 31 is 'Return to ASCII Mode'
+        """
+        msg = 'G1<'
+        enc = 'G1<'.encode('datamatrix.edifact')
+        self.assertEqual(msg, enc.decode('datamatrix.edifact'))
+
+    def test_encode_EDIFACT(self):
+        """Encode entire alphabet and compare to datamatrix-svg."""
+        truth = [240, 130, 24, 163, 146, 89, 167, 162, 154, 171, 178, 219, 175,
+                 195, 28, 179, 211, 93, 183, 227, 158, 187, 243, 223, 191, 0,
+                 16, 131, 16, 81, 135, 32, 146, 139, 48, 211, 143, 65, 20, 147,
+                 81, 85, 151, 97, 150, 155, 113, 215, 159]
+        enc = EDIFACT.encode('datamatrix.edifact')
+        self.assertEqual(enc, bytes(truth))
 
 
 if __name__ == '__main__':
