@@ -21,7 +21,7 @@ def add_inverse_lookup(codepage):
 
 
 def encode_text_mode(msg, codepage, magic, multiset):
-    """Encode to datamatrix.C40."""
+    """Encode to datamatrix text modes (C40, TEXT, X12)."""
     # Recipe:
     # 1. Declace codepage by magic code (e.g., b'\xE6' for C40)
     # 2. Convert chars in msg to raw-bytes by translation via codepage
@@ -64,7 +64,7 @@ def encode_text_mode(msg, codepage, magic, multiset):
 
 
 def decode_text_mode(enc, codepage, magic, multiset):
-    """Decode datamatrix.C40-encoded message."""
+    """Decode datamatrix text-mode-encoded message (C40, TEXT, X12)."""
     enc = bytes(enc)
     magic = list(magic)[0]
     if enc[0] != magic:

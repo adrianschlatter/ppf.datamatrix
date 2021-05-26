@@ -33,15 +33,15 @@ add_inverse_lookup(codepage)
 
 def encode_to_text(msg):
     """Encode to datamatrix.text."""
-    return encode_text_mode(msg, codepage, b'\xE9', True)
+    return encode_text_mode(msg, codepage, b'\xEF', True)
 
 
 def decode_from_text(enc):
     """Decode datamatrix.text-encoded message."""
     try:
-        msg, length = decode_text_mode(enc, codepage, b'\xE9', True)
+        msg, length = decode_text_mode(enc, codepage, b'\xEF', True)
     except ValueError:
-        raise ValueError(f'{enc} is not valid TEXT code')
+        raise ValueError(f'{bytes(enc)} is not valid TEXT code')
 
     return msg, length
 
