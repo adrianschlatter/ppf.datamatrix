@@ -25,7 +25,7 @@ class Smoke_Test(object):
         for method in methods:
             try:
                 getattr(self.dm, method)()
-            except:     # noqa: E722
+            except:
                 self.fail(f'DataMatrix.{method} raises exception')
 
     def test_properties(self):
@@ -35,7 +35,7 @@ class Smoke_Test(object):
         for prop in props:
             try:
                 getattr(self.dm, prop)
-            except:     # noqa: E722
+            except:
                 self.fail(f'DataMatrix.{prop} raises exception')
 
 
@@ -45,7 +45,7 @@ class Test_EDIFACT(Smoke_Test, unittest.TestCase):
     def setUp(self):
         try:
             self.dm = put.DataMatrix(EDIFACT)
-        except:     # noqa: E722
+        except:
             self.fail('Exception upon valid instantiation')
 
 
@@ -55,7 +55,7 @@ class Test_ASCII(Smoke_Test, unittest.TestCase):
     def setUp(self):
         try:
             self.dm = put.DataMatrix(ASCII)
-        except:     # noqa: E722
+        except:
             self.fail('Exception upon valid instantiation')
 
 
@@ -66,7 +66,7 @@ class Test_BASE256(Smoke_Test, unittest.TestCase):
     def setUp(self):
         try:
             self.dm = put.DataMatrix(BASE256)
-        except:     # noqa: E722
+        except:
             self.fail('Exception upon valid instantiation')
 
 

@@ -9,9 +9,7 @@ Verify that datamatrix.text codec works as expected
 
 import unittest
 from .common import ASCII
-# Following import needed to register text codec, even though 'put' not
-# referenced in code:
-import ppf.datamatrix as put  # noqa: F401
+import ppf.datamatrix as put
 
 
 class Test_datamatrix_text(unittest.TestCase):

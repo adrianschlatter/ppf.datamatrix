@@ -7,8 +7,6 @@ https://raw.githubusercontent.com/datalog/datamatrix-svg/master/datamatrix.js
 .. author: Adrian Schlatter
 """
 
-# flake8: noqa: E741
-
 __all__ = []
 
 from .utils import export
@@ -44,7 +42,6 @@ class DataMatrix():
 
     def _svg_path_iterator(self):
         mat = self.matrix
-        h = len(mat)
         w = len(mat[0])
 
         for line in mat:
@@ -117,10 +114,10 @@ class DataMatrix():
                 j += 1
                 w = k[j]  # width
                 h = 6 + (j & 12)  # height
-                l = w * h // 8  # bytes count in symbol
+                bc = w * h // 8  # bytes count in symbol
 
                 j += 1
-                if l - k[j] >= el:  # could we fill the rect?
+                if bc - k[j] >= el:  # could we fill the rect?
                     break
 
             # column regions
@@ -134,7 +131,7 @@ class DataMatrix():
             k = [5, 7, 10, 12, 14, 18, 20, 24, 28, 36, 42, 48, 56, 68,
                  84, 112, 144, 192, 224, 272, 336, 408, 496, 620]
 
-            l = 0
+            bc = 0
             while True:
                 j += 1
                 if j == len(k):
@@ -145,27 +142,27 @@ class DataMatrix():
 
                 h += i
                 w = h
-                l = (w * h) >> 3
+                bc = (w * h) >> 3
 
-                if l - k[j] >= el:
+                if bc - k[j] >= el:
                     break
 
             if(w > 27):
                 nr = nc = 2 * (w // 54 | 0) + 2  # regions
-            if(l > 255):
-                b = 2 * (l >> 9) + 2            # blocks
+            if(bc > 255):
+                b = 2 * (bc >> 9) + 2            # blocks
 
         s = k[j]        # rs checkwords
         fw = w // nc     # region size
         fh = h // nr
 
         # first padding
-        if(el < l - s):
+        if(el < bc - s):
             enc[el] = 129
             el += 1
 
         # more padding
-        while(el < l - s):
+        while(el < bc - s):
             enc[el] = (((149 * (el + 1)) % 253) + 130) % 254
             el += 1
 
@@ -236,7 +233,7 @@ class DataMatrix():
         # diagonal steps
         i = 0
         while True:
-            if i >= l:
+            if i >= bc:
                 break
 
             if (r == h - 3 and c == - 1):
