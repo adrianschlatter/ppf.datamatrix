@@ -55,7 +55,7 @@ class Test_datamatrix_edifact(unittest.TestCase):
                 msg = EDIFACT[i:2 * i]
 
             # assert that this does not raise:
-            datamatrix = put.DataMatrix(msg, rct=True)
+            datamatrix = put.DataMatrix(msg, rect=True)
 
             m = datamatrix.matrix
             self.assertTrue(len(m) > 0)

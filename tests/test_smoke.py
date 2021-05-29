@@ -94,10 +94,10 @@ class Test_CornerCases(unittest.TestCase):
 
     def test_long_rect_message(self):
         """Test very long rect messages for same behavior as datamatrix-svg."""
-        m = put.DataMatrix('~' * 49, rct=True).matrix
+        m = put.DataMatrix('~' * 49, rect=True).matrix
         self.assertTrue(len(m) < len(m[0]))
 
-        m = put.DataMatrix('~' * 50, rct=True).matrix
+        m = put.DataMatrix('~' * 50, rect=True).matrix
         self.assertTrue(len(m) == len(m[0]))
 
     @unittest.skip

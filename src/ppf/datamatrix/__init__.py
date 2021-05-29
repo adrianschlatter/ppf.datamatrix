@@ -2,7 +2,15 @@
 ppf.datamatrix
 ++++++++++++++
 
+
 ppf.datamatrix is a pure-python package to generate datamatrix codes.
+
+Example:
+
+    from ppf.datamatrix import DataMatrix
+    my_matrix = DataMatrix('Write your message here')
+    # get svg of datamatrix:
+    svg = my_matrix.svg()
 """
 
 # register codecs

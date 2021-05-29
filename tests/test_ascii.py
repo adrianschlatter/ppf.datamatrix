@@ -54,7 +54,7 @@ class Test_datamatrix_ascii(unittest.TestCase):
                 msg = ASCII[i:2 * i]
 
             # assert that this does not raise:
-            datamatrix = put.DataMatrix(msg, rct=True)
+            datamatrix = put.DataMatrix(msg, rect=True)
 
             self.assertTrue(len(datamatrix.matrix) > 0)
 

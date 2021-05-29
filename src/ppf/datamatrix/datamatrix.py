@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+DataMatrix class resides here.
+
 Ported from:
 https://raw.githubusercontent.com/datalog/datamatrix-svg/master/datamatrix.js
 
@@ -18,24 +20,26 @@ svg_template = \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
-    'xmlns:xlink="http://www.w3.org/1999/xlink"><defs/>' \
+    'xmlns:xlink="http://www.w3.org/1999/xlink">' \
     '<path d="M1,1.5 {path_cmds}" stroke="{fg}" stroke-width="1"/></svg>'
 
 
 @export
 class DataMatrix():
     """
-    Creates a datamatrix code for message 'msg'.
+    Create a datamatrix code for message 'msg'.
 
-    Currently supports EDIFACT messages and nothing more.
+    Set rect=True for a rectangular datamatrix (if possible). Default is
+    False, resulting in a square datamatrix.
     """
 
-    def __init__(self, msg, rct=False):
-        self._msg = msg
-        self._rct = rct
+    def __init__(self, msg, rect=False):
+        self.message = msg
+        self.rectangular = rect
 
     def __repr__(self):
-        return f"DataMatrix('{self._msg}')"
+        """Return a text representation of this object."""
+        return f"DataMatrix('{self.message}')"
 
     def _repr_svg_(self):
         return self.svg(bg='#000', fg='#FFF')
@@ -63,6 +67,13 @@ class DataMatrix():
             yield f'{-w},1'
 
     def svg(self, fg='#000', bg='#FFF'):
+        """
+        SVG of datamatrix.
+
+        Use fg and bg arguments to specify foreground and background color,
+        respectively. Colors are given as hex triplets such as fg='#F00'
+        (red).
+        """
         cmds = ''.join(self._svg_path_iterator())
         mat = self.matrix
         height = len(mat) + 2
@@ -71,25 +82,22 @@ class DataMatrix():
                                    height=height, width=width)
 
     @property
-    def message(self):
-        return self._msg
-
-    @property
     def matrix(self):
-        rct = self._rct
-
+        """
+        Return datamatrix as list of rows. Each row is a list of 1's and 0's.
+        """
         def bit(x, y):
             M[y] = M.get(y, {})
             M[y][x] = 1
 
-        # unescape( encodeURI( text ) );
         M = {}
         enc = []
-        for codec in ['datamatrix.ascii', 'datamatrix.edifact',
-                      'datamatrix.C40', 'datamatrix.text', 'datamatrix.X12']:
+        for codec in ['datamatrix.ascii', 'datamatrix.C40', 'datamatrix.text',
+                      'datamatrix.X12', 'datamatrix.edifact']:
             try:
-                enc.append(self._msg.encode(codec))
+                enc.append(self.message.encode(codec))
             except ValueError:
+                # This message is not encodable in this codec. Skip it.
                 pass
 
         enc = min(enc, key=len)
@@ -106,7 +114,7 @@ class DataMatrix():
         lg = [0] * 256  # log / exp table for multiplication
         ex = [0] * 255
 
-        if rct and el < 50:  # rectangular code
+        if self.rectangular and el < 50:  # rectangular code
             # symbol width, checkwords
             k = [16, 7, 28, 11, 24, 14, 32, 18, 32, 24, 44, 28]
 
