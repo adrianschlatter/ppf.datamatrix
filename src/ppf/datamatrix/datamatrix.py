@@ -9,6 +9,8 @@ https://raw.githubusercontent.com/datalog/datamatrix-svg/master/datamatrix.js
 
 # flake8: noqa: E741
 
+__all__ = []
+
 from .utils import export
 
 svg_template = \

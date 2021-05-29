@@ -11,6 +11,7 @@ decoded = encoded.decode('datamatrix.edifact')
 
 .. author: Adrian Schlatter
 """
+__all__ = []
 
 import codecs
 

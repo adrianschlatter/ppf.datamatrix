@@ -11,6 +11,7 @@ decoded = encoded.decode('datamatrix.C40')
 
 .. author: Adrian Schlatter
 """
+__all__ = []
 
 import codecs
 from .codec_common import set1, set2, add_inverse_lookup

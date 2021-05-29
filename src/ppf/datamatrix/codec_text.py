@@ -11,6 +11,7 @@ decoded = encoded.decode('datamatrix.text')
 
 .. author: Adrian Schlatter
 """
+__all__ = []
 
 import codecs
 from .codec_common import set1, set2, add_inverse_lookup

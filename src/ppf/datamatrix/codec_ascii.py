@@ -11,6 +11,7 @@ decoded = encoded.decode('datamatrix.ascii')
 
 .. author: Adrian Schlatter
 """
+__all__ = []
 
 import codecs
 

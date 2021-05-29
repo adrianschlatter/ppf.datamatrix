@@ -11,6 +11,7 @@ decoded = encoded.decode('datamatrix.X12')
 
 .. author: Adrian Schlatter
 """
+__all__ = []
 
 import codecs
 from .codec_common import add_inverse_lookup

@@ -17,4 +17,10 @@ from .codec_X12 import *
 from .datamatrix import *
 
 del datamatrix
+del codec_ascii
+del codec_edifact
+del codec_C40
+del codec_text
+del codec_X12
+del codec_common
 del utils
