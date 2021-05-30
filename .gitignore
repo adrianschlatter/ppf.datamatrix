@@ -14,9 +14,13 @@ __pycache__/
 
 # due to using coverage
 .coverage
+htmlcov/
 
 # due to vscode:
 .vscode/
 
 # due to Mac:
 **/.DS_Store
+
+# due to comparing against the code we port from:
+datamatrix-svg/

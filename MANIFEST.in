@@ -1,0 +1,5 @@
+# Include the license file
+include LICENSE
+
+# Exclude docs (they are needed on github and pypi, not in installation):
+recursive-exclude docs *
