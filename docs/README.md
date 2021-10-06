@@ -65,4 +65,5 @@ pip install ppf.datamatrix
 
 # Change Log
 
+* 0.1.1: Fixed bug in datamatrix.ascii encoding of digit pairs
 * 0.1: Initial port of datamatrix–svg
