@@ -35,7 +35,12 @@ class Test_datamatrix_ascii(unittest.TestCase):
     def test_encode_digitpair(self):
         """Encode a pair of digits and verify correctness."""
         code = '60'.encode('datamatrix.ascii')
-        self.assertEqual(code, bytes([190]))
+        self.assertEqual(code, bytes([130 + 60]))
+
+    def test_encode_digittriplet(self):
+        """Encode a group of 3 digits and verify correctness."""
+        code = '325'.encode('datamatrix.ascii')
+        self.assertEqual(code, bytes([130 + 32, ord('5') + 1]))
 
     def test_encode_to_datamatrix(self):
         """Verify that encoding to datamatrix works."""
