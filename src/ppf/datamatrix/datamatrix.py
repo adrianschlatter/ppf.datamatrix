@@ -204,7 +204,7 @@ class DataMatrix():
                     if x:
                         rc[j] = rc[j + 1] ^ ex[(lg[rs[j]] + lg[x]) % 255]
                     else:
-                        rc[j] = rc[j + 1] ^ 0
+                        rc[j] = rc[j + 1]
 
             # interleaved correction data
             for i in range(s):
