@@ -16,7 +16,7 @@ If you are working in a graphically enabled IPython terminal, you'll see your da
 
 ![IPython integration](imgs/ipython.png)
 
-Using the DataMatrix object you get the SVG source like this:
+Using the DataMatrix object, you get the SVG source like this:
 
 ```
 myDataMatrix.svg()
