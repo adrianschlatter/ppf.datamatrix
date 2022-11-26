@@ -62,9 +62,15 @@ ppf.datamatrix is available via [pypi](https://pypi.org):
 pip install ppf.datamatrix
 ```
 
+# Still reading?
+
+If you read this far, you're probably not here for the first time. If you
+use and like ppf.datamatrix, would you consider giving it a Github Star? (The
+button is at the top of this website.)
+
 
 # Change Log
 
-* 0.1.2: Fixed bug in S correction data for each block
-* 0.1.1: Fixed bug in datamatrix.ascii encoding of digit pairs
-* 0.1: Initial port of datamatrix–svg
+* 0.1.2:    Fixed bug in RS correction data for each block
+* 0.1.1:    Fixed bug in datamatrix.ascii encoding of digit pairs
+* 0.1:      Initial port of datamatrix–svg
