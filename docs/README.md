@@ -1,5 +1,7 @@
 <img alt="ppf.datamatrix logo" src="./imgs/logo.svg" width="500em">
 
+<img alt="pypi downloads/month" src="https://img.shields.io/pypi/dm/ppf.datamatrix.svg">
+
 ppf.datamatrix is a pure-python package to generate datamatrix codes in SVG. Also, it integrates nicely in IPython.
 
 ppf.datamatrix has been ported from [datalog's datamatrix-svg](https://github.com/datalog/datamatrix-svg), which is written in javascript. If you like to see what you'll get before installation, check out their [nice web demo](https://datalog.github.io/demo/datamatrix-svg).
