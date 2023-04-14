@@ -1,0 +1,25 @@
+name: tox
+
+on:
+  pull_request:
+  workflow_dispatch:  # you can trigger this workflow manually
+
+jobs:
+  tox_on_ubuntu:
+
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python: ["3.6", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+      - name: install tox
+        run: pip install tox
+      - name: run tox
+        # Run tox using the version of Python in `PATH`
+        run: tox -e py
