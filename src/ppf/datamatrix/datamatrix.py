@@ -50,10 +50,10 @@ class DataMatrix():
 
         for line in mat:
             i = 0
-            while(i < w):
+            while i < w:
                 color = line[i]
                 i0 = i
-                while(i < w and line[i] == color):
+                while i < w and line[i] == color:
                     i = i + 1
 
                 length = i - i0
@@ -145,7 +145,7 @@ class DataMatrix():
                 if j == len(k):
                     raise ValueError('Message is too long')
 
-                if(w > 11 * i):
+                if w > 11 * i:
                     i = 4 + i & 12  # advance increment
 
                 h += i
@@ -155,9 +155,9 @@ class DataMatrix():
                 if bc - k[j] >= el:
                     break
 
-            if(w > 27):
+            if w > 27:
                 nr = nc = 2 * (w // 54 | 0) + 2  # regions
-            if(bc > 255):
+            if bc > 255:
                 b = 2 * (bc >> 9) + 2            # blocks
 
         s = k[j]        # rs checkwords
@@ -165,12 +165,12 @@ class DataMatrix():
         fh = h // nr
 
         # first padding
-        if(el < bc - s):
+        if el < bc - s:
             enc[el] = 129
             el += 1
 
         # more padding
-        while(el < bc - s):
+        while el < bc - s:
             enc[el] = (((149 * (el + 1)) % 253) + 130) % 254
             el += 1
 
@@ -184,7 +184,7 @@ class DataMatrix():
             lg[j] = i
             j += j
 
-            if(j > 255):
+            if j > 255:
                 j ^= 301    # 301 == a^8 + a^5 + a^3 + a^2 + 1
 
         # RS generator polynomial
@@ -215,14 +215,14 @@ class DataMatrix():
         for i in range(0, h + 2 * nr, fh + 2):
             for j in range(0, w + 2 * nc):
                 bit(j, i + fh + 1)
-                if((j & 1) == 0):
+                if (j & 1) == 0:
                     bit(j, i)
 
         # vertical
         for i in range(0, w + 2 * nc, fw + 2):
             for j in range(h):
                 bit(i, j + (j // fh | 0) * 2 + 1)
-                if((j & 1) == 1):
+                if (j & 1) == 1:
                     bit(i + fw + 1, j + (j // fh | 0) * 2)
 
         s = 2   # step
