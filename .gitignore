@@ -24,3 +24,6 @@ htmlcov/
 
 # due to comparing against the code we port from:
 datamatrix-svg/
+
+# experimental code
+experimental/
