@@ -16,14 +16,13 @@ __all__ = []
 import codecs
 
 
-def pack(ascii, tail=b''):
+def pack(ascii):
     """Packs groups of 4 ascii-encoded edifact chars into 3-byte words."""
-    assert (len(ascii) + len(tail)) % 4 == 0
+    assert len(ascii) % 4 == 0
 
-    raw = [code & 0x3F for code in ascii if 32 <= code <= 94]
+    raw = [code & 0x3F for code in ascii if 31 <= code <= 94]
     if len(raw) < len(ascii):
         raise ValueError('Invalid EDIFACT')
-    raw += tail
 
     packed = []
     while len(raw) > 0:
@@ -38,22 +37,22 @@ def pack(ascii, tail=b''):
 
 def encode_to_edifact(msg):
     """Encode message as datamatrix.edifact."""
-    # edifact encoding works in groups of 4 characters:
-    n_rest = len(msg) % 4
+    # We want to encode the characters in msg + the "return to ASCII" code (1F)
+    # Edifact packs 4 input bytes into 3 output bytes.
+    # What length of input can we pack?
+    # len(msg) + 1 (return to ASCII) rounded down to nearest multiple of 4:
+    l_packable = ((len(msg) + 1) // 4) * 4
+    # cw = 0
 
-    if n_rest == 0:
-        enc = b'\xF0' + pack(msg.encode('ascii'))
-    elif n_rest == 1:
-        if len(msg) < 2:
-            enc = (b'\xF0' + pack(msg.encode('ascii'), b'\x1F\x00\x00'))
-        else:
-            enc = (b'\xF0' +
-                   pack(msg[:-2].encode('ascii'), b'\x1F') +
-                   msg[-2:].encode('datamatrix.ascii'))
-    elif n_rest == 2:
-        enc = b'\xF0' + pack(msg.encode('ascii'), b'\x1F\x00')
-    else:
-        enc = b'\xF0' + pack(msg.encode('ascii'), b'\x1F')
+    enc = b''
+    if l_packable > 0:  # at least one edifact group => switch to Edifact
+        enc += b'\xF0'    # "switch to EDIFACT" code
+        enc += pack(msg[:l_packable - 1].encode('ascii') + b'\x1F')
+
+    # otherwise, remain in ASCII mode
+
+    l_remaining = min(len(msg), len(msg) + 1 - l_packable)
+    enc = enc + msg[len(msg) - l_remaining:].encode('datamatrix.ascii')
 
     return enc, len(enc)
 
@@ -62,7 +61,11 @@ def decode_from_edifact(enc):
     """Decode edifact-encoded message."""
     edifact = list(enc)
     if edifact[0] != 0xF0:
-        raise ValueError(f'{enc} is not EDIFACT encoded')
+        if len(edifact) <= 2:
+            msg = bytes(edifact).decode('datamatrix.ascii')
+            return msg, len(msg)
+        else:
+            raise ValueError(f'{enc} is not EDIFACT encoded')
 
     raw = []
     edifact.pop(0)

@@ -61,9 +61,9 @@ class Test_datamatrix_edifact(unittest.TestCase):
             self.assertTrue(len(m) > 0)
 
     def test_encode_known(self):
-        """Encode and verify correctness."""
+        """Test single-char edifact encoding"""
         enc = 'A'.encode('datamatrix.edifact')
-        self.assertEqual(enc, b'\xf0\x05\xf0\x00')
+        self.assertEqual(enc, b'\x42')
 
     def test_31(self):
         """
