@@ -31,11 +31,21 @@ class DataMatrix():
 
     Set rect=True for a rectangular datamatrix (if possible). Default is
     False, resulting in a square datamatrix.
+
+    Set codecs to a list of codecs if you don't want DataMatrix to
+    select freely from all codecs for minimum code size.
     """
 
-    def __init__(self, msg, rect=False):
+    def __init__(self, msg, rect=False,
+                 codecs=['ascii', 'C40', 'text', 'X12', 'edifact']):
         self.message = msg
         self.rectangular = rect
+        for codec in codecs:
+            if codec not in ['ascii', 'C40', 'text', 'X12', 'edifact']:
+                raise TypeError("codec must be one of "
+                                "'ascii', 'C40', 'text', 'X12', 'edifact'")
+
+        self.codecs = ['datamatrix.' + c for c in codecs]
 
     def __repr__(self):
         """Return a text representation of this object."""
@@ -92,8 +102,7 @@ class DataMatrix():
 
         M = {}
         enc = []
-        for codec in ['datamatrix.ascii', 'datamatrix.C40', 'datamatrix.text',
-                      'datamatrix.X12', 'datamatrix.edifact']:
+        for codec in self.codecs:
             try:
                 enc.append(self.message.encode(codec))
             except ValueError:
