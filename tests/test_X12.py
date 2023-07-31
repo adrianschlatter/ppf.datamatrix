@@ -27,10 +27,23 @@ class Test_datamatrix_X12(unittest.TestCase):
             decoded = code.decode('datamatrix.X12')
             self.assertEqual(decoded, msg)
 
-    def test_encode_known(self):
-        """Encode and verify correctness."""
+    def test_encode_known_short(self):
+        """
+        Encode short string and verify correctness.
+
+        'short' means: Too short to pack a single word.
+        """
         code = 'A'.encode('datamatrix.X12')
-        self.assertEqual(code, b'\xEE\xFEB')
+        self.assertEqual(code, b'B')
+
+    def test_encode_known_long(self):
+        """
+        Encode long string and verify correctness.
+
+        'long' means: Long enough to have word packing.
+        """
+        code = (8 * 'A' + '*').encode('datamatrix.X12')
+        self.assertEqual(code, b'\xeeY\xbfY\xbfY\xb2\xfe')
 
     def test_encode_X12(self):
         """Encode entire alphabet and compare to datamatrix-svg."""

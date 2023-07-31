@@ -27,10 +27,28 @@ class Test_datamatrix_text(unittest.TestCase):
             decoded = code.decode('datamatrix.text')
             self.assertEqual(decoded, msg)
 
-    def test_encode_known(self):
-        """Encode and verify correctness."""
+    def test_encode_known_short(self):
+        """
+        Encode short string and verify correctness.
+
+        'short' means: Too short to pack a single word.
+        """
         code = 'A'.encode('datamatrix.text')
-        self.assertEqual(code, b'\xEF\xFEB')
+        self.assertEqual(code, b'B')
+
+    def test_encode_known_long(self):
+        """
+        Encode long string and verify correctness.
+
+        'long' means: Long enough to have word packing.
+        """
+        code = (9 * 'a' + '!').encode('datamatrix.text')
+        self.assertEqual(code, b'\xefY\xbfY\xbfY\xbf\xfe"')
+
+    def test_return_to_ascii(self):
+        """Encode string that results in lonely RTA code at the end"""
+        code = 'Hello World!'.encode('datamatrix.text')
+        self.assertEqual(code, b'\xef\r\xd3\xa0E\x13(\xb3\xf2ji\xfe')
 
     def test_encode_ASCII(self):
         """Encode ASCII and compare to datamatrix-svg."""
