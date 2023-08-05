@@ -93,8 +93,8 @@ The button is at the top of this website.)
 # Contributing
 
 Did you find a bug and would like to report it? Or maybe you've fixed it
-already? That's great! Please read [CONTRIBUTING](./CONTRIBUTING.md) to learn how
-to proceed from there.
+already or want to help fixing it? That's great! Please read
+[CONTRIBUTING](./CONTRIBUTING.md) to learn how to proceed from there.
 
 To help ascertain that contributing to this project is a pleasant experience, we
 have established a [code of conduct](./CODE_OF_CONDUCT.md). You can expect

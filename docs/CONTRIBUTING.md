@@ -17,7 +17,10 @@ Thank for considering a contribution! Any help is greatly appreciated.
   maintainer to reproduce your problem.
 
 
-## Did you write a patch?
+## Contributing Code
+
+You want to help with a bug or contribute a feature? The [development
+docs](./dev/DEVDOCS.md) might help you along. 
 
 You already have a solution for an issue or a new feature? All the better! A
 pull request ("PR") is what you want to do.
