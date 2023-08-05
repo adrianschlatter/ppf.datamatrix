@@ -3,7 +3,7 @@
 Make sure that you:
 
 - successfully ran tox
-- bumped up the version number (/setup.cfg)
+- bumped up the version number (__init__.py of package)
 - updated the changelog (/docs/README.md)
 - checked the README for pypi (/docs/README_pypi.md)
 
@@ -37,10 +37,10 @@ twine upload dist/*
 ## Test Install
 
 Activate an environment that does not have a (development-) installation of
-ppf.datamatrix. Run
+ppf.sample. Run
 
 ```
-pip install ppf.datamatrix
+pip install ppf.sample
 ```
 
 This should download and install the version you've just released.
