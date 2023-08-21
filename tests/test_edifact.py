@@ -84,6 +84,19 @@ class Test_datamatrix_edifact(unittest.TestCase):
         enc = EDIFACT.encode('datamatrix.edifact')
         self.assertEqual(enc, bytes(truth))
 
+    def test_decode_invalid_EDIFACT(self):
+        """Try to decode invalid code."""
+
+        code = 9 * b'\x00'
+        with self.assertRaises(ValueError):
+            code.decode('datamatrix.edifact')
+
+    def test_search_nonEDIFACT(self):
+        """Test that search_codec callback returns None for non-EDIFACT."""
+
+        from ppf.datamatrix import codec_edifact
+        self.assertTrue(codec_edifact.search_codec_edifact('invalid') is None)
+
 
 if __name__ == '__main__':
     # This enables running the unit tests by running this script which is

@@ -15,6 +15,7 @@ __pycache__/
 # due to using coverage
 .coverage
 htmlcov/
+coverage.lcov
 
 # due to vscode:
 .vscode/

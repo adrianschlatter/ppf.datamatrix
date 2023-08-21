@@ -61,6 +61,19 @@ class Test_datamatrix_C40(unittest.TestCase):
         # except for missing an 0xFE at the end:
         self.assertTrue(code == truth or code == truth[:-1])
 
+    def test_decode_invalid_C40(self):
+        """Try to decode invalid code."""
+
+        code = 9 * b'\x00'
+        with self.assertRaises(ValueError):
+            code.decode('datamatrix.C40')
+
+    def test_search_nonTEXT(self):
+        """Test that search_codec callback returns None for non-C40."""
+
+        from ppf.datamatrix import codec_C40
+        self.assertTrue(codec_C40.search_codec_C40('invalid') is None)
+
 
 if __name__ == '__main__':
     # This enables running the unit tests by running this script which is

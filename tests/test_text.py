@@ -71,6 +71,19 @@ class Test_datamatrix_text(unittest.TestCase):
                  b'\xbb\xafn\x113\xfe\x80')
         self.assertTrue(code == truth)
 
+    def test_decode_invalid_TEXT(self):
+        """Try to decode invalid code."""
+
+        code = 9 * b'\x00'
+        with self.assertRaises(ValueError):
+            code.decode('datamatrix.text')
+
+    def test_search_nonTEXT(self):
+        """Test that search_codec callback returns None for non-TEXT."""
+
+        from ppf.datamatrix import codec_text
+        self.assertTrue(codec_text.search_codec_text('invalid') is None)
+
 
 if __name__ == '__main__':
     # This enables running the unit tests by running this script which is
