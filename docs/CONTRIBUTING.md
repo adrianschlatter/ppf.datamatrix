@@ -25,7 +25,8 @@ docs](./dev/DEVDOCS.md) might help you along.
 You already have a solution for an issue or a new feature? All the better! A
 pull request ("PR") is what you want to do.
 
-* Open a new [pull-request](https://github.com/adrianschlatter/ppf.datamatrix/pulls)
+* Open a new
+  [pull-request](https://github.com/adrianschlatter/ppf.datamatrix/pulls)
   with your patch.
 
 * Try to create PRs that address a specific issue/feature/topic.
@@ -45,6 +46,6 @@ pull request ("PR") is what you want to do.
 
 ## Final remarks
 
-Currently, ppf.datamatrix is maintained in the spare time of a single person having
-a family and a job. If you do not get immediate feedback to your issue or pull
-request, please have some patience.
+Currently, ppf.datamatrix is maintained in the spare time of a single person
+having a family and a job. If you do not get immediate feedback to your issue
+or pull request, please have some patience.

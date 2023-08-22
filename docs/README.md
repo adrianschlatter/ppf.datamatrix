@@ -85,9 +85,10 @@ pip install ppf.datamatrix
 
 # Still reading?
 
-If you read this far, you're probably not here for the first time.
-If you use and like ppf.datamatrix, would you consider giving it a Github Star?
-The button is at the top of this website.)
+If you read this far, you're probably not here for the first time. If you use
+and like this project, would you consider giving it a Github Star? (The button
+is at the top of this website.) If not, maybe you're interested in one of
+[my other projects](https://github.com/adrianschlatter/ppf.sample/blob/develop/docs/list_of_projects.md)?
 
 
 # Contributing
