@@ -61,9 +61,9 @@ class Test_datamatrix_edifact(unittest.TestCase):
             self.assertTrue(len(m) > 0)
 
     def test_encode_known(self):
-        """Encode and verify correctness."""
+        """Test single-char edifact encoding"""
         enc = 'A'.encode('datamatrix.edifact')
-        self.assertEqual(enc, b'\xf0\x05\xf0\x00')
+        self.assertEqual(enc, b'\x42')
 
     def test_31(self):
         """
@@ -83,6 +83,19 @@ class Test_datamatrix_edifact(unittest.TestCase):
                  81, 85, 151, 97, 150, 155, 113, 215, 159]
         enc = EDIFACT.encode('datamatrix.edifact')
         self.assertEqual(enc, bytes(truth))
+
+    def test_decode_invalid_EDIFACT(self):
+        """Try to decode invalid code."""
+
+        code = 9 * b'\x00'
+        with self.assertRaises(ValueError):
+            code.decode('datamatrix.edifact')
+
+    def test_search_nonEDIFACT(self):
+        """Test that search_codec callback returns None for non-EDIFACT."""
+
+        from ppf.datamatrix import codec_edifact
+        self.assertTrue(codec_edifact.search_codec_edifact('invalid') is None)
 
 
 if __name__ == '__main__':

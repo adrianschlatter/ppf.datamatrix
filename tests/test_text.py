@@ -27,10 +27,28 @@ class Test_datamatrix_text(unittest.TestCase):
             decoded = code.decode('datamatrix.text')
             self.assertEqual(decoded, msg)
 
-    def test_encode_known(self):
-        """Encode and verify correctness."""
+    def test_encode_known_short(self):
+        """
+        Encode short string and verify correctness.
+
+        'short' means: Too short to pack a single word.
+        """
         code = 'A'.encode('datamatrix.text')
-        self.assertEqual(code, b'\xEF\xFEB')
+        self.assertEqual(code, b'B')
+
+    def test_encode_known_long(self):
+        """
+        Encode long string and verify correctness.
+
+        'long' means: Long enough to have word packing.
+        """
+        code = (9 * 'a' + '!').encode('datamatrix.text')
+        self.assertEqual(code, b'\xefY\xbfY\xbfY\xbf\xfe"')
+
+    def test_return_to_ascii(self):
+        """Encode string that results in lonely RTA code at the end"""
+        code = 'Hello World!'.encode('datamatrix.text')
+        self.assertEqual(code, b'\xef\r\xd3\xa0E\x13(\xb3\xf2ji\xfe')
 
     def test_encode_ASCII(self):
         """Encode ASCII and compare to datamatrix-svg."""
@@ -52,6 +70,19 @@ class Test_datamatrix_text(unittest.TestCase):
                  b'\xc0f\xbby\xf6\x8d1\xa0l\xb3\xa7\xc6\xe2\xda\x1d\xedX\x10'
                  b'\xbb\xafn\x113\xfe\x80')
         self.assertTrue(code == truth)
+
+    def test_decode_invalid_TEXT(self):
+        """Try to decode invalid code."""
+
+        code = 9 * b'\x00'
+        with self.assertRaises(ValueError):
+            code.decode('datamatrix.text')
+
+    def test_search_nonTEXT(self):
+        """Test that search_codec callback returns None for non-TEXT."""
+
+        from ppf.datamatrix import codec_text
+        self.assertTrue(codec_text.search_codec_text('invalid') is None)
 
 
 if __name__ == '__main__':

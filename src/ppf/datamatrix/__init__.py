@@ -13,6 +13,8 @@ Example:
     svg = my_matrix.svg()
 """
 
+__version__ = '0.2'
+
 # register codecs
 from .codec_ascii import *
 from .codec_edifact import *

@@ -31,11 +31,21 @@ class DataMatrix():
 
     Set rect=True for a rectangular datamatrix (if possible). Default is
     False, resulting in a square datamatrix.
+
+    Set codecs to a list of codecs if you don't want DataMatrix to
+    select freely from all codecs for minimum code size.
     """
 
-    def __init__(self, msg, rect=False):
+    def __init__(self, msg, rect=False,
+                 codecs=['ascii', 'C40', 'text', 'X12', 'edifact']):
         self.message = msg
         self.rectangular = rect
+        for codec in codecs:
+            if codec not in ['ascii', 'C40', 'text', 'X12', 'edifact']:
+                raise TypeError("codec must be one of "
+                                "'ascii', 'C40', 'text', 'X12', 'edifact'")
+
+        self.codecs = ['datamatrix.' + c for c in codecs]
 
     def __repr__(self):
         """Return a text representation of this object."""
@@ -50,10 +60,10 @@ class DataMatrix():
 
         for line in mat:
             i = 0
-            while(i < w):
+            while i < w:
                 color = line[i]
                 i0 = i
-                while(i < w and line[i] == color):
+                while i < w and line[i] == color:
                     i = i + 1
 
                 length = i - i0
@@ -92,8 +102,7 @@ class DataMatrix():
 
         M = {}
         enc = []
-        for codec in ['datamatrix.ascii', 'datamatrix.C40', 'datamatrix.text',
-                      'datamatrix.X12', 'datamatrix.edifact']:
+        for codec in self.codecs:
             try:
                 enc.append(self.message.encode(codec))
             except ValueError:
@@ -145,7 +154,7 @@ class DataMatrix():
                 if j == len(k):
                     raise ValueError('Message is too long')
 
-                if(w > 11 * i):
+                if w > 11 * i:
                     i = 4 + i & 12  # advance increment
 
                 h += i
@@ -155,9 +164,9 @@ class DataMatrix():
                 if bc - k[j] >= el:
                     break
 
-            if(w > 27):
+            if w > 27:
                 nr = nc = 2 * (w // 54 | 0) + 2  # regions
-            if(bc > 255):
+            if bc > 255:
                 b = 2 * (bc >> 9) + 2            # blocks
 
         s = k[j]        # rs checkwords
@@ -165,12 +174,12 @@ class DataMatrix():
         fh = h // nr
 
         # first padding
-        if(el < bc - s):
+        if el < bc - s:
             enc[el] = 129
             el += 1
 
         # more padding
-        while(el < bc - s):
+        while el < bc - s:
             enc[el] = (((149 * (el + 1)) % 253) + 130) % 254
             el += 1
 
@@ -184,7 +193,7 @@ class DataMatrix():
             lg[j] = i
             j += j
 
-            if(j > 255):
+            if j > 255:
                 j ^= 301    # 301 == a^8 + a^5 + a^3 + a^2 + 1
 
         # RS generator polynomial
@@ -204,7 +213,7 @@ class DataMatrix():
                     if x:
                         rc[j] = rc[j + 1] ^ ex[(lg[rs[j]] + lg[x]) % 255]
                     else:
-                        rc[j] = 0
+                        rc[j] = rc[j + 1]
 
             # interleaved correction data
             for i in range(s):
@@ -215,14 +224,14 @@ class DataMatrix():
         for i in range(0, h + 2 * nr, fh + 2):
             for j in range(0, w + 2 * nc):
                 bit(j, i + fh + 1)
-                if((j & 1) == 0):
+                if (j & 1) == 0:
                     bit(j, i)
 
         # vertical
         for i in range(0, w + 2 * nc, fw + 2):
             for j in range(h):
                 bit(i, j + (j // fh | 0) * 2 + 1)
-                if((j & 1) == 1):
+                if (j & 1) == 1:
                     bit(i + fw + 1, j + (j // fh | 0) * 2)
 
         s = 2   # step

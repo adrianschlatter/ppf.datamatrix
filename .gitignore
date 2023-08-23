@@ -15,6 +15,7 @@ __pycache__/
 # due to using coverage
 .coverage
 htmlcov/
+coverage.lcov
 
 # due to vscode:
 .vscode/
@@ -24,3 +25,6 @@ htmlcov/
 
 # due to comparing against the code we port from:
 datamatrix-svg/
+
+# experimental code
+experimental/

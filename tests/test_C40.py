@@ -27,10 +27,23 @@ class Test_datamatrix_C40(unittest.TestCase):
             decoded = code.decode('datamatrix.C40')
             self.assertEqual(decoded, msg)
 
-    def test_encode_known(self):
-        """Encode and verify correctness."""
+    def test_encode_known_short(self):
+        """
+        Encode short string and verify correctness.
+
+        'short' means: Too short to pack a single word.
+        """
         code = 'A'.encode('datamatrix.C40')
-        self.assertEqual(code, b'\xE6\xFEB')
+        self.assertEqual(code, b'B')
+
+    def test_encode_known_long(self):
+        """
+        Encode long string and verify correctness.
+
+        'long' means: Long enough to have word packing.
+        """
+        code = (9 * 'A' + '!').encode('datamatrix.C40')
+        self.assertEqual(code, b'\xe6Y\xbfY\xbfY\xbf\xfe"')
 
     def test_encode_ASCII(self):
         """Encode ASCII and compare to datamatrix-svg."""
@@ -47,6 +60,19 @@ class Test_datamatrix_C40(unittest.TestCase):
         # We do not consider it as an error if code is equal to truth
         # except for missing an 0xFE at the end:
         self.assertTrue(code == truth or code == truth[:-1])
+
+    def test_decode_invalid_C40(self):
+        """Try to decode invalid code."""
+
+        code = 9 * b'\x00'
+        with self.assertRaises(ValueError):
+            code.decode('datamatrix.C40')
+
+    def test_search_nonTEXT(self):
+        """Test that search_codec callback returns None for non-C40."""
+
+        from ppf.datamatrix import codec_C40
+        self.assertTrue(codec_C40.search_codec_C40('invalid') is None)
 
 
 if __name__ == '__main__':
