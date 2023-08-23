@@ -45,7 +45,8 @@ myDataMatrix.svg(fg='#EEF', bg='#09D')
 <img alt="Test! DataMatrix in red on blue background" src="./imgs/Test_colored.svg" width="50em">
 
 Note: This sets the colors of the SVG.
-It does *not* change the color of the representation inside your IPython terminal.
+It does *not* change the color of the representation inside your IPython
+terminal.
 
 
 ## Advanced Features
@@ -73,6 +74,18 @@ decoded
 'TEST'
 ```
 
+Furthermore it is possible to tell the DataMatrix class which codecs to use.
+The default is to try all valid datamatrix codecs and select the one
+resulting in the shortest code. This line:
+
+```
+myDataMatrix = DataMatrix('Test!', codecs=['C40', 'edifact'])
+```
+
+will try (only) datamatrix.C40 and datamatrix.edifact and select the shorter
+one. Of course, you can provide a list of one to enforce a particular
+encoding.
+
 
 # Installation
 
@@ -97,13 +110,15 @@ Did you find a bug and would like to report it? Or maybe you've fixed it
 already or want to help fixing it? That's great! Please read
 [CONTRIBUTING](./CONTRIBUTING.md) to learn how to proceed from there.
 
-To help ascertain that contributing to this project is a pleasant experience, we
-have established a [code of conduct](./CODE_OF_CONDUCT.md). You can expect
+To help ascertain that contributing to this project is a pleasant experience,
+we have established a [code of conduct](./CODE_OF_CONDUCT.md). You can expect
 everyone to adhere to it, just make sure you do as well.
 
 
 # Change Log
 
+* 0.2:      Fixed RTA problems causing erroneous datamatrices; added capability
+            to specify encoding(s) to use
 * 0.1.2:    Fixed bug in RS correction data for each block
 * 0.1.1:    Fixed bug in datamatrix.ascii encoding of digit pairs
 * 0.1:      Initial port of datamatrix–svg
