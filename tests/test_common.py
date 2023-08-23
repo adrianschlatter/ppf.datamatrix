@@ -8,8 +8,7 @@ Verify that datamatrix.C40 codec works as expected
 """
 
 import unittest
-from .common import ASCII
-import ppf.datamatrix as put
+from ppf.datamatrix import codec_common
 
 
 class Test_Common(unittest.TestCase):
@@ -19,7 +18,6 @@ class Test_Common(unittest.TestCase):
         """Try to pack invalid raw."""
 
         raw = 4 * b'\x00'  # length not multiple of 4
-        from ppf.datamatrix import codec_common
         with self.assertRaises(ValueError):
             codec_common.pack_words(raw)
 
@@ -27,6 +25,5 @@ class Test_Common(unittest.TestCase):
         """Try to unpack invalid words."""
 
         words = 3 * b'\x00'  # length not even
-        from ppf.datamatrix import codec_common
         with self.assertRaises(ValueError):
             codec_common.unpack_words(words)
