@@ -33,7 +33,7 @@ def msgs_from_alphabet(alphabet):
     for i in range(len(alphabet)):
         if 2 * i > len(alphabet):
             msg = (alphabet[i:] +
-                   alphabet[:3 * i - len(alphabet)])
+                   alphabet[:2 * i - len(alphabet)])
         else:
             msg = alphabet[i:2 * i]
 
