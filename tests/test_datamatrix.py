@@ -20,3 +20,34 @@ class Test_DataMatrix(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             put.DataMatrix('message', codecs=['invalid_codec'])
+
+
+class Test_A(unittest.TestCase):
+    """Test simple edifact datamatrix."""
+
+    def test_square_matrix(self):
+        dm = put.DataMatrix('A', rect=False)
+        truth = [[1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+                 [1, 1, 0, 1, 1, 0, 0, 0, 1, 1],
+                 [1, 0, 0, 0, 1, 1, 0, 1, 0, 0],
+                 [1, 0, 0, 1, 1, 0, 1, 0, 1, 1],
+                 [1, 0, 0, 1, 0, 1, 0, 0, 0, 0],
+                 [1, 0, 0, 1, 0, 0, 1, 0, 1, 1],
+                 [1, 1, 0, 1, 0, 0, 1, 1, 0, 0],
+                 [1, 1, 0, 0, 1, 1, 1, 1, 0, 1],
+                 [1, 1, 0, 0, 0, 0, 1, 0, 0, 0],
+                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+        self.assertEqual(dm.matrix, truth)
+
+    def test_rect_matrix(self):
+        """Test that rectangular matrix is not square."""
+        dm = put.DataMatrix('~', rect=True)
+        truth = [[1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+                 [1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1],
+                 [1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 0],
+                 [1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1],
+                 [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0],
+                 [1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1],
+                 [1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0],
+                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+        self.assertTrue(dm.matrix, truth)
