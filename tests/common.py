@@ -23,6 +23,23 @@ X12 = '\r*> 01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 BASE256 = bytes(range(256))
 
 
+def msgs_from_alphabet(alphabet):
+    """
+    Creates test messages from alphabet
+
+    Number of messages yielded is equal to length of alphabet. Length of
+    messages varies from 0 to length of alphabet.
+    """
+    for i in range(len(alphabet)):
+        if 2 * i > len(alphabet):
+            msg = (alphabet[i:] +
+                   alphabet[:3 * i - len(alphabet)])
+        else:
+            msg = alphabet[i:2 * i]
+
+        yield msg
+
+
 class Codec_Test(object):
     """
     Template class to test codec
@@ -39,13 +56,7 @@ class Codec_Test(object):
 
     def test_consistency(self):
         """Verify that coding + decoding return the original message."""
-        for i in range(len(self.ALPHABET)):
-            if 2 * i > len(self.ALPHABET):
-                msg = (self.ALPHABET[i:] +
-                       self.ALPHABET[:3 * i - len(self.ALPHABET)])
-            else:
-                msg = self.ALPHABET[i:2 * i]
-
+        for msg in msgs_from_alphabet(self.ALPHABET):
             code = msg.encode(self.CODEC)
             decoded = code.decode(self.CODEC)
             self.assertEqual(decoded, msg)
@@ -58,30 +69,16 @@ class Codec_Test(object):
 
     def test_encode_to_square_datamatrix(self):
         """Verify that encoding to square datamatrix works."""
-        for i in range(len(self.ALPHABET)):
-            if 2 * i > len(self.ALPHABET):
-                msg = (self.ALPHABET[i:] +
-                       self.ALPHABET[:3 * i - len(self.ALPHABET)])
-            else:
-                msg = self.ALPHABET[i:2 * i]
-
+        for msg in msgs_from_alphabet(self.ALPHABET):
             # assert that this does not raise:
             datamatrix = put.DataMatrix(msg)
-
             self.assertTrue(len(datamatrix.matrix) > 0)
 
     def test_encode_to_rect_datamatrix(self):
         """Verify that encoding to rectangular datamatrix works."""
-        for i in range(len(self.ALPHABET)):
-            if 2 * i > len(self.ALPHABET):
-                msg = (self.ALPHABET[i:] +
-                       self.ALPHABET[:3 * i - len(self.ALPHABET)])
-            else:
-                msg = self.ALPHABET[i:2 * i]
-
+        for msg in msgs_from_alphabet(self.ALPHABET):
             # assert that this does not raise:
             datamatrix = put.DataMatrix(msg, rect=True)
-
             m = datamatrix.matrix
             self.assertTrue(len(m) > 0)
 
