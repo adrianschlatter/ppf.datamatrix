@@ -123,3 +123,10 @@ class Test_CornerCases(unittest.TestCase):
             msg = ''.join(random.choices(ASCII, k=n))
             datamatrix = put.DataMatrix(msg)
             self.assertTrue(len(datamatrix.matrix) > 0)
+
+
+if __name__ == '__main__':
+    # This enables running the unit tests by running this script which is
+    # much more convenient than 'python setup.py test' while developing tests.
+    # Note: package-under-test needs to be in python-path
+    unittest.main()
