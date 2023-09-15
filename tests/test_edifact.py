@@ -7,63 +7,22 @@ Verify that datamatrix.edifact codec works as expected
 .. author: Adrian Schlatter
 """
 
+import ppf.datamatrix
 import unittest
-from .common import EDIFACT
-import ppf.datamatrix as put
+from .common import EDIFACT, Codec_Test
 
 
-class Test_datamatrix_edifact(unittest.TestCase):
+class Test_datamatrix_edifact(Codec_Test, unittest.TestCase):
     """Test codecs datamatrix.edifact."""
 
-    def test_encode_decode(self):
-        """Verify that coding + decoding return the original message."""
-        for i in range(len(EDIFACT)):
-            if 2 * i > len(EDIFACT):
-                msg = EDIFACT[i:] + EDIFACT[:3 * i - len(EDIFACT)]
-            else:
-                msg = EDIFACT[i:2 * i]
-
-            code = msg.encode('datamatrix.edifact')
-            decoded = code.decode('datamatrix.edifact')
-            self.assertEqual(decoded, msg)
-
-    def test_raises(self):
-        """Verify that error is raised for invalid EDIFACT."""
-        code = bytes([0])
-        with self.assertRaises(ValueError):
-            code.decode('datamatrix.edifact')
-
-    def test_encode_to_square_datamatrix(self):
-        """Verify that encoding to square datamatrix works."""
-        for i in range(len(EDIFACT)):
-            if 2 * i > len(EDIFACT):
-                msg = EDIFACT[i:] + EDIFACT[:3 * i - len(EDIFACT)]
-            else:
-                msg = EDIFACT[i:2 * i]
-
-            # assert that this does not raise:
-            datamatrix = put.DataMatrix(msg)
-
-            self.assertTrue(len(datamatrix.matrix) > 0)
-
-    def test_encode_to_rect_datamatrix(self):
-        """Verify that encoding to rectangular datamatrix works."""
-        for i in range(len(EDIFACT)):
-            if 2 * i > len(EDIFACT):
-                msg = EDIFACT[i:] + EDIFACT[:3 * i - len(EDIFACT)]
-            else:
-                msg = EDIFACT[i:2 * i]
-
-            # assert that this does not raise:
-            datamatrix = put.DataMatrix(msg, rect=True)
-
-            m = datamatrix.matrix
-            self.assertTrue(len(m) > 0)
-
-    def test_encode_known(self):
-        """Test single-char edifact encoding"""
-        enc = 'A'.encode('datamatrix.edifact')
-        self.assertEqual(enc, b'\x42')
+    CODEC = 'datamatrix.edifact'
+    ALPHABET = EDIFACT
+    ALPHABET_ENC = (
+        b'\xf0\x82\x18\xa3\x92Y\xa7\xa2\x9a\xab\xb2\xdb\xaf\xc3'
+        b'\x1c\xb3\xd3]\xb7\xe3\x9e\xbb\xf3\xdf\xbf\x00\x10\x83\x10Q\x87'
+        b' \x92\x8b0\xd3\x8fA\x14\x93QU\x97a\x96\x9bq\xd7\x9f')
+    KNOWN_PAIR = {'msg': 'A', 'enc': b'\x42'}
+    CODEC_MODULE_NAME = 'codec_edifact'
 
     def test_31(self):
         """
@@ -74,28 +33,6 @@ class Test_datamatrix_edifact(unittest.TestCase):
         msg = 'G1<'
         enc = 'G1<'.encode('datamatrix.edifact')
         self.assertEqual(msg, enc.decode('datamatrix.edifact'))
-
-    def test_encode_EDIFACT(self):
-        """Encode entire alphabet and compare to datamatrix-svg."""
-        truth = [240, 130, 24, 163, 146, 89, 167, 162, 154, 171, 178, 219, 175,
-                 195, 28, 179, 211, 93, 183, 227, 158, 187, 243, 223, 191, 0,
-                 16, 131, 16, 81, 135, 32, 146, 139, 48, 211, 143, 65, 20, 147,
-                 81, 85, 151, 97, 150, 155, 113, 215, 159]
-        enc = EDIFACT.encode('datamatrix.edifact')
-        self.assertEqual(enc, bytes(truth))
-
-    def test_decode_invalid_EDIFACT(self):
-        """Try to decode invalid code."""
-
-        code = 9 * b'\x00'
-        with self.assertRaises(ValueError):
-            code.decode('datamatrix.edifact')
-
-    def test_search_nonEDIFACT(self):
-        """Test that search_codec callback returns None for non-EDIFACT."""
-
-        from ppf.datamatrix import codec_edifact
-        self.assertTrue(codec_edifact.search_codec_edifact('invalid') is None)
 
 
 if __name__ == '__main__':

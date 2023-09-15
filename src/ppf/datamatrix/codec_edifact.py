@@ -35,7 +35,7 @@ def pack(ascii):
     return bytes(packed)
 
 
-def encode_to_edifact(msg):
+def encode(msg):
     """Encode message as datamatrix.edifact."""
     # We want to encode the characters in msg + the "return to ASCII" code (1F)
     # Edifact packs 4 input bytes into 3 output bytes.
@@ -57,7 +57,7 @@ def encode_to_edifact(msg):
     return enc, len(enc)
 
 
-def decode_from_edifact(enc):
+def decode(enc):
     """Decode edifact-encoded message."""
     edifact = list(enc)
     if edifact[0] != 0xF0:
@@ -92,13 +92,13 @@ def decode_from_edifact(enc):
     return msg, len(msg)
 
 
-def search_codec_edifact(encoding_name):
+def search_codec(encoding_name):
     """Search function needed for registration in python codecs."""
     if encoding_name != 'datamatrix.edifact':
         return None
 
-    return codecs.CodecInfo(encode_to_edifact, decode_from_edifact,
+    return codecs.CodecInfo(encode, decode,
                             name='datamatrix.edifact')
 
 
-codecs.register(search_codec_edifact)
+codecs.register(search_codec)

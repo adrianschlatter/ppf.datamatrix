@@ -32,12 +32,12 @@ codepage = {**codepage,
 add_inverse_lookup(codepage)
 
 
-def encode_to_C40(msg):
+def encode(msg):
     """Encode to datamatrix.C40."""
     return encode_text_mode(msg, codepage, b'\xE6', True)
 
 
-def decode_from_C40(enc):
+def decode(enc):
     """Decode datamatrix.C40-encoded message."""
     try:
         msg, length = decode_text_mode(enc, codepage, b'\xE6', True)
@@ -47,14 +47,14 @@ def decode_from_C40(enc):
     return msg, length
 
 
-def search_codec_C40(encoding_name):
+def search_codec(encoding_name):
     """Search function needed for registration in python codecs."""
     if encoding_name != 'datamatrix.c40':
         return None
 
-    return codecs.CodecInfo(encode_to_C40,
-                            decode_from_C40,
+    return codecs.CodecInfo(encode,
+                            decode,
                             name='datamatrix.C40')
 
 
-codecs.register(search_codec_C40)
+codecs.register(search_codec)

@@ -32,12 +32,12 @@ codepage = {**codepage,
 add_inverse_lookup(codepage)
 
 
-def encode_to_text(msg):
+def encode(msg):
     """Encode to datamatrix.text."""
     return encode_text_mode(msg, codepage, b'\xEF', True)
 
 
-def decode_from_text(enc):
+def decode(enc):
     """Decode datamatrix.text-encoded message."""
     try:
         msg, length = decode_text_mode(enc, codepage, b'\xEF', True)
@@ -47,14 +47,14 @@ def decode_from_text(enc):
     return msg, length
 
 
-def search_codec_text(encoding_name):
+def search_codec(encoding_name):
     """Search function needed for registration in python codecs."""
     if encoding_name != 'datamatrix.text':
         return None
 
-    return codecs.CodecInfo(encode_to_text,
-                            decode_from_text,
+    return codecs.CodecInfo(encode,
+                            decode,
                             name='datamatrix.text')
 
 
-codecs.register(search_codec_text)
+codecs.register(search_codec)

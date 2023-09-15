@@ -11,7 +11,7 @@ import unittest
 from ppf.datamatrix import codec_common
 
 
-class Test_Common(unittest.TestCase):
+class Test_Codec_Common(unittest.TestCase):
     """Test codec_common"""
 
     def test_pack_words_of_invalid_raw(self):

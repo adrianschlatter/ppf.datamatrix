@@ -26,7 +26,7 @@ import codecs
 DIGITS = '0123456789'
 
 
-def encode_to_ascii(msg):
+def encode(msg):
     """Encode to datamatrix.ascii."""
     enc = []
     i = 0
@@ -41,7 +41,7 @@ def encode_to_ascii(msg):
     return bytes(enc), len(enc)
 
 
-def decode_from_ascii(code):
+def decode(code):
     """Decode datamatrix.ascii-encoded message."""
     msg = ''
     for c in code:
@@ -53,14 +53,14 @@ def decode_from_ascii(code):
     return msg, len(msg)
 
 
-def search_codec_ascii(encoding_name):
+def search_codec(encoding_name):
     """Search function needed for registration in python codecs."""
     if encoding_name != 'datamatrix.ascii':
         return None
 
-    return codecs.CodecInfo(encode_to_ascii,
-                            decode_from_ascii,
+    return codecs.CodecInfo(encode,
+                            decode,
                             name='datamatrix.ascii')
 
 
-codecs.register(search_codec_ascii)
+codecs.register(search_codec)

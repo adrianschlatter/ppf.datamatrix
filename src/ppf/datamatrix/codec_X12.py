@@ -24,7 +24,7 @@ codepage = {char: [code] for char, code in zip(X12, range(40))}
 add_inverse_lookup(codepage)
 
 
-def encode_to_X12(msg):
+def encode(msg):
     """Encode to datamatrix.X12."""
     try:
         enc, length = encode_text_mode(msg, codepage, b'\xEE', False)
@@ -34,7 +34,7 @@ def encode_to_X12(msg):
     return enc, length
 
 
-def decode_from_X12(enc):
+def decode(enc):
     """Decode datamatrix.X12-encoded message."""
     try:
         msg, length = decode_text_mode(enc, codepage, b'\xEE', False)
@@ -44,14 +44,14 @@ def decode_from_X12(enc):
     return msg, length
 
 
-def search_codec_X12(encoding_name):
+def search_codec(encoding_name):
     """Search function needed for registration in python codecs."""
     if encoding_name != 'datamatrix.x12':
         return None
 
-    return codecs.CodecInfo(encode_to_X12,
-                            decode_from_X12,
+    return codecs.CodecInfo(encode,
+                            decode,
                             name='datamatrix.X12')
 
 
-codecs.register(search_codec_X12)
+codecs.register(search_codec)
