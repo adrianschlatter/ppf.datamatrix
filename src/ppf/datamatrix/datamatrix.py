@@ -36,10 +36,14 @@ class DataMatrix():
     select freely from all codecs for minimum code size.
     """
 
-    def __init__(self, msg, rect=False,
+    def __init__(self, msg, rect=False, gs1_datamatrix=False,
                  codecs=['ascii', 'C40', 'text', 'X12', 'edifact']):
         self.message = msg
         self.rectangular = rect
+        if gs1_datamatrix:
+            self.first_byte = 0xe8 # prefix for gs1 datamatrix "flavor"
+        else:
+            self.first_byte = None
         for codec in codecs:
             if codec not in ['ascii', 'C40', 'text', 'X12', 'edifact']:
                 raise TypeError("codec must be one of "
@@ -91,6 +95,21 @@ class DataMatrix():
         return svg_template.format(fg=fg, bg=bg, path_cmds=cmds,
                                    height=height, width=width)
 
+    def _encode_msg(self):
+        enc = []
+        for codec in self.codecs:
+            try:
+                enc.append(self.message.encode(codec))
+            except ValueError:
+                # This message is not encodable in this codec. Skip it.
+                pass
+
+        enc = min(enc, key=len)
+        if not self.first_byte is None:
+            enc = bytes([self.first_byte]) + enc
+
+        return enc
+
     @property
     def matrix(self):
         """
@@ -101,16 +120,8 @@ class DataMatrix():
             M[y][x] = 1
 
         M = {}
-        enc = []
-        for codec in self.codecs:
-            try:
-                enc.append(self.message.encode(codec))
-            except ValueError:
-                # This message is not encodable in this codec. Skip it.
-                pass
 
-        enc = min(enc, key=len)
-        enc = {i: c for i, c in enumerate(enc)}
+        enc = {i: c for i, c in enumerate(self._encode_msg())}
         el = len(enc)
 
         nc = 1
