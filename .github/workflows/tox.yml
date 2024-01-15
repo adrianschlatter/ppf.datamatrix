@@ -1,9 +1,13 @@
 name: tox
 
 on:
-  pull_request:         # for non-fork PRs
-  pull_request_target:  # PRs from forks. Uses tox.yml from base.
-  workflow_dispatch:    # you can trigger this workflow manually
+  pull_request:          # PR into master (=release)
+    branches:
+      - master
+  pull_request_target:   # PR (from fork) into develop.   
+    branches:            # Uses workflow defined in base, not in fork.
+      - develop
+  workflow_dispatch:     # to trigger workflow manually
 
 jobs:
   tox_on_ubuntu:
