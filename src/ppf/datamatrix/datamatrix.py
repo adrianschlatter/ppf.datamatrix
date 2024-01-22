@@ -16,7 +16,7 @@ from .utils import export
 svg_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
-    'height="{height}px" width="{width}px" ' \
+    'viewBox="0 0 {height} {width}" ' \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
