@@ -41,7 +41,7 @@ class DataMatrix():
         self.message = msg
         self.rectangular = rect
         if gs1_datamatrix:
-            self.first_byte = 0xe8 # prefix for gs1 datamatrix "flavor"
+            self.first_byte = 0xe8  # prefix for gs1 datamatrix "flavor"
         else:
             self.first_byte = None
         for codec in codecs:
@@ -105,7 +105,7 @@ class DataMatrix():
                 pass
 
         enc = min(enc, key=len)
-        if not self.first_byte is None:
+        if self.first_byte is not None:
             enc = bytes([self.first_byte]) + enc
 
         return enc
