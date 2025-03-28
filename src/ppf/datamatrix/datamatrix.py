@@ -22,7 +22,8 @@ svg_template = \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
     'xmlns:xlink="http://www.w3.org/1999/xlink">' \
-    '<path d="M1,1.5 {path_cmds}" stroke="{fg}" stroke-width="1"/></svg>'
+    '<path d="M{start_coords} {path_cmds}" ' \
+    'stroke="{fg}" stroke-width="1"/></svg>'
 
 
 @export
@@ -77,20 +78,25 @@ class DataMatrix():
             yield 'm'
             yield f'{-w},1'
 
-    def svg(self, fg='#000', bg='#FFF'):
+    def svg(self, fg='#000', bg='#FFF', margin=1):
         """
         SVG of datamatrix.
 
         Use fg and bg arguments to specify foreground and background color,
         respectively. Colors are given as hex triplets such as fg='#F00'
         (red).
+
+        Use the margin attribute to set the margin in pixels, defaults to 1.
         """
         cmds = ''.join(self._svg_path_iterator())
         mat = self.matrix
-        height = len(mat) + 2
-        width = len(mat[0]) + 2
+        height = len(mat) + (2 * margin)
+        width = len(mat[0]) + (2 * margin)
+        start_coords = "{},{}".format(margin, margin + 0.5)
+
         return svg_template.format(fg=fg, bg=bg, path_cmds=cmds,
-                                   height=height, width=width)
+                                   height=height, width=width,
+                                   start_coords=start_coords)
 
     @property
     def matrix(self):
