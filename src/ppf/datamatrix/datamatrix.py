@@ -16,13 +16,13 @@ from .utils import export
 svg_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
-    'viewBox="0 0 {width} {height}" ' \
+    'viewBox="{x0} {y0} {width} {height}" ' \
     'width="{width}mm" height="{height}mm" ' \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
     'xmlns:xlink="http://www.w3.org/1999/xlink">' \
-    '<path d="M{start_coords} {path_cmds}" ' \
+    '<path d="M1,1.5 {path_cmds}" ' \
     'stroke="{fg}" stroke-width="1"/></svg>'
 
 
@@ -86,17 +86,23 @@ class DataMatrix():
         respectively. Colors are given as hex triplets such as fg='#F00'
         (red).
 
-        Use the margin attribute to set the margin in pixels, defaults to 1.
+        Use the margin attribute to set the margin in units, defaults to 1.
         """
         cmds = ''.join(self._svg_path_iterator())
         mat = self.matrix
-        height = len(mat) + (2 * margin)
-        width = len(mat[0]) + (2 * margin)
-        start_coords = "{},{}".format(margin, margin + 0.5)
+        height = len(mat)
+        width = len(mat[0])
+        x0 = 1
+        y0 = 1
+
+        # margin is handled by adjusting the viewBox:
+        height += margin * 2
+        width += margin * 2
+        x0 -= margin
+        y0 -= margin
 
         return svg_template.format(fg=fg, bg=bg, path_cmds=cmds,
-                                   height=height, width=width,
-                                   start_coords=start_coords)
+                                   x0=x0, y0=y0, height=height, width=width)
 
     @property
     def matrix(self):
