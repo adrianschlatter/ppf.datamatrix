@@ -68,7 +68,7 @@ class DataMatrix():
                     yield f"\n<rect width='2' height='2' x='{2*j+1}' y='{2*i+1}' fill='{fg}' />"
 
 
-    def svg(self, fg='#000', bg='#FFF', margin=1, gen_rects=False, size="auto":
+    def svg(self, fg='#000', bg='#FFF', margin=1, gen_rects=False, size="auto"):
         """
         SVG of datamatrix.
 
