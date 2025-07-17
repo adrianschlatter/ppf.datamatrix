@@ -89,8 +89,8 @@ class DataMatrix():
         y0 = 1
 
         # margin is handled by adjusting the viewBox:
-        vbox_height += margin * 2
-        vbox_width += margin * 2
+        vbox_height = height + margin * 2
+        vbox_width = height + margin * 2
         x0 -= margin
         y0 -= margin
 
