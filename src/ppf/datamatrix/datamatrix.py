@@ -68,7 +68,7 @@ class DataMatrix():
                     yield f"\n<rect width='2' height='2' x='{2*(j+margin)}' y='{2*(i+margin)}' fill='{fg}' />"
 
 
-    def svg(self, fg='#000', bg='#FFF', margin=1, size=None):
+    def svg(self, fg='#000', bg='#FFF', margin=1, render_size_mm=(12,12)):
         """
         SVG of datamatrix.
 
@@ -80,17 +80,15 @@ class DataMatrix():
         """
         
         rects = ''.join(self._svg_rect_iterator(fg,bg,margin))
-
-        mat = self.matrix
-        height = len(mat)
-        width = len(mat[0])
-        vbox_height = (height+margin*2)*2
-        vbox_width = (width+margin*2)*2
-        if size:
-            height = size[1]
-            width = size[0]
         
-        return svg_rects_template.format(fg=fg, bg=bg, rects=rects,
+        mat = self.matrix
+        vbox_height = len(mat)*(height+margin*2)*2
+        vbox_width = len(mat[0])*(width+margin*2)*2
+        height = render_size_mm[1]
+        width = render_size_mm[0]
+        
+        return svg_rects_template.format(fg=fg, bg=bg, 
+                                rects=rects,
                                 vbox_width = vbox_width,
                                 vbox_height = vbox_height,
                                 height=height, width=width)
