@@ -116,7 +116,7 @@ class DataMatrix():
         y0 -= margin
 
         return svg_template.format(fg=fg, bg=bg, rects=rects,
-                                   x0=x0, y0=y0, height=height, width=width)
+                                   x0=x0, y0=y0, height=2*height, width=2*width)
 
     @property
     def matrix(self):
