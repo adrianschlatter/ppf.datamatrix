@@ -17,13 +17,12 @@ from .utils import export
 svg_rects_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
-    'viewBox="{x0} {y0} {width} {height}" ' \
+    'viewBox="0 0 {vbox_width} {vbox_height}" ' \
     'width="{width}mm" height="{height}mm" ' \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
-    'xmlns:xlink="http://www.w3.org/1999/xlink" ' \
-    'transform="scale({x_scale},{y_scale})">' \
+    'xmlns:xlink="http://www.w3.org/1999/xlink" >' \
     '{rects}' \
     '</svg>'
 
@@ -59,14 +58,14 @@ class DataMatrix():
     def _repr_svg_(self):
         return self.svg(bg='#000', fg='#FFF')
 
-    def _svg_rect_iterator(self,fg,bg):
+    def _svg_rect_iterator(self,fg,bg,margin):
         mat = self.matrix
         w = len(mat[0])
 
         for i,line in enumerate(mat):    
             for j,sym in enumerate(line):
                 if sym==1:
-                    yield f"\n<rect width='2' height='2' x='{2*j+1}' y='{2*i+1}' fill='{fg}' />"
+                    yield f"\n<rect width='2' height='2' x='{2*(j+margin)}' y='{2*(i+margin)}' fill='{fg}' />"
 
 
     def svg(self, fg='#000', bg='#FFF', margin=1, size=None):
@@ -80,35 +79,16 @@ class DataMatrix():
         Use the margin attribute to set the margin in units, defaults to 1.
         """
         
-        rects = ''.join(self._svg_rect_iterator(fg,bg))
+        rects = ''.join(self._svg_rect_iterator(fg,bg,margin))
 
-        
         mat = self.matrix
         height = len(mat)
         width = len(mat[0])
-        x0 = 1
-        y0 = 1
-
-        # margin is handled by adjusting the viewBox:
-        vbox_height = height + margin * 2
-        vbox_width = width + margin * 2
-        x0 -= margin
-        y0 -= margin
-
-        if size=="auto":
-            height = vbox_height
-            width = vbox_width
-        else:
-            output_width = size[0]
-            output_height = size[1]
-
-        x_scale = output_width / width
-        y_scale = output_height / height
         
         return svg_rects_template.format(fg=fg, bg=bg, rects=rects,
-                                x0=x0, y0=y0, 
-                                height=2*height, width=2*width,
-                                x_scale=x_scale, y_scale=y_scale)
+                                vbox_width = (width+margin)*2,
+                                vbox_height = (height+margin)*2,
+                                height=2*height, width=2*width)
         
     @property
     def matrix(self):
