@@ -17,12 +17,13 @@ from .utils import export
 svg_rects_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
-    'viewBox="{x0} {y0} {vbox_width} {vbox_height}" ' \
+    'viewBox="{x0} {y0} {width} {height}" ' \
     'width="{width}mm" height="{height}mm" ' \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
-    'xmlns:xlink="http://www.w3.org/1999/xlink">' \
+    'xmlns:xlink="http://www.w3.org/1999/xlink"'
+    'transform="scale({x_scale,y_scale} >' \
     '{rects}' \
     '</svg>'
 
@@ -68,7 +69,7 @@ class DataMatrix():
                     yield f"\n<rect width='2' height='2' x='{2*j+1}' y='{2*i+1}' fill='{fg}' />"
 
 
-    def svg(self, fg='#000', bg='#FFF', margin=1, gen_rects=False, size="auto"):
+    def svg(self, fg='#000', bg='#FFF', margin=1, size=None):
         """
         SVG of datamatrix.
 
@@ -90,7 +91,7 @@ class DataMatrix():
 
         # margin is handled by adjusting the viewBox:
         vbox_height = height + margin * 2
-        vbox_width = height + margin * 2
+        vbox_width = width + margin * 2
         x0 -= margin
         y0 -= margin
 
@@ -98,13 +99,16 @@ class DataMatrix():
             height = vbox_height
             width = vbox_width
         else:
-            width = size[0]
-            height = size[1]
-            
+            output_width = size[0]
+            output_height = size[1]
+
+        x_scale = output_width / width.
+        y_scale = output_height / height.
+        
         return svg_rects_template.format(fg=fg, bg=bg, rects=rects,
                                 x0=x0, y0=y0, 
-                                vbox_height=2*vbox_height, vbox_width=2*width,
-                                height=height, width=width)
+                                height=2*height, width=2*width,
+                                x_scale=x_scale, y_scale=y_scale)
         
     @property
     def matrix(self):
