@@ -85,7 +85,8 @@ class DataMatrix():
         for i,line in enumerate(mat):    
             for j,sym in enumerate(line):
                 if sym==1:
-                    yield f"\n<rect width='1' height='1' x='{j+1}' y='{i+1}' fill='{fg}' stroke='{fg}' />"
+                    #yield f"\n<rect width='1' height='1' x='{j+1}' y='{i+1}' fill='{fg}' stroke='{fg}' />"
+                    yield f"\n<rect x='{j+1}' y='{i+1}' fill='{fg}' />"
                 #else:
                 #    yield f"\n<rect width='1' height='1' x='{j+1}' y='{i+1}' fill='{bg}' stroke='{bg}' />"
 
