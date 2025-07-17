@@ -86,8 +86,8 @@ class DataMatrix():
         width = len(mat[0])
         
         return svg_rects_template.format(fg=fg, bg=bg, rects=rects,
-                                vbox_width = (width+margin)*2,
-                                vbox_height = (height+margin)*2,
+                                vbox_width = (width+margin*2)*2,
+                                vbox_height = (height+margin*2)*2,
                                 height=2*height, width=2*width)
         
     @property
