@@ -102,8 +102,8 @@ class DataMatrix():
             output_width = size[0]
             output_height = size[1]
 
-        x_scale = output_width / width.
-        y_scale = output_height / height.
+        x_scale = output_width / width
+        y_scale = output_height / height
         
         return svg_rects_template.format(fg=fg, bg=bg, rects=rects,
                                 x0=x0, y0=y0, 
