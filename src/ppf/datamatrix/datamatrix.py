@@ -84,10 +84,10 @@ class DataMatrix():
 
         for i,line in enumerate(mat):    
             for j,sym in enumerate(line):
-                if sym:
+                if sym==1:
                     yield f"\n<rect width='1' height='1' x='{j+1}' y='{i+1}' fill='{fg}' stroke='{fg}' />"
-                else:
-                    yield f"\n<rect width='1' height='1' x='{j+1}' y='{i+1}' fill='{bg}' stroke='{bg}' />"
+                #else:
+                #    yield f"\n<rect width='1' height='1' x='{j+1}' y='{i+1}' fill='{bg}' stroke='{bg}' />"
 
     def svg(self, fg='#000', bg='#FFF', margin=1):
         """
