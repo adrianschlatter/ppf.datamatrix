@@ -22,8 +22,8 @@ svg_template = \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
     'xmlns:xlink="http://www.w3.org/1999/xlink">' \
-    '<path d="M1,1.5 {path_cmds}" ' \
-    'stroke="{fg}" stroke-width="1"/></svg>'
+    '{rects}' \
+    '</svg>'
 
 
 @export
@@ -78,6 +78,17 @@ class DataMatrix():
             yield 'm'
             yield f'{-w},1'
 
+    def _svg_rect_iterator(self,fg,bg):
+        mat = self.matrix
+        w = len(mat[0])
+
+        for i,line in enumerate(mat):    
+            for j,sym in enumerate(line):
+                if sym:
+                    yield f"<rect width=1 height=1 x={i+1} y={j+1} fill='{fg}' stroke='{fg}'>"
+                else:
+                    yield f"<rect width=1 height=1 x={i+1} y={j+1} fill='{bg}' stroke='{bg}'>"
+
     def svg(self, fg='#000', bg='#FFF', margin=1):
         """
         SVG of datamatrix.
@@ -88,7 +99,9 @@ class DataMatrix():
 
         Use the margin attribute to set the margin in units, defaults to 1.
         """
-        cmds = ''.join(self._svg_path_iterator())
+        #cmds = ''.join(self._svg_path_iterator())
+        rects = ''.join(self._svg_rect_iterator(fg,bg))
+        
         mat = self.matrix
         height = len(mat)
         width = len(mat[0])
@@ -101,7 +114,7 @@ class DataMatrix():
         x0 -= margin
         y0 -= margin
 
-        return svg_template.format(fg=fg, bg=bg, path_cmds=cmds,
+        return svg_template.format(fg=fg, bg=bg, rects=rects,
                                    x0=x0, y0=y0, height=height, width=width)
 
     @property
