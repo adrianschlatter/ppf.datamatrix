@@ -40,7 +40,7 @@ class DataMatrix():
     """
 
     def __init__(self, msg, rect=False,
-                 codecs=['ascii', 'C40', 'text', 'X12', 'edifact']:
+                 codecs=['ascii', 'C40', 'text', 'X12', 'edifact']):
                      
         self.message = msg
         self.rectangular = rect
