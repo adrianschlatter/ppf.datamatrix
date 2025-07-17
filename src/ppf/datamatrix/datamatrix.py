@@ -17,7 +17,7 @@ from .utils import export
 svg_rects_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
-    'viewBox="{x0} {y0} {vbx_width} {vbx_height}" ' \
+    'viewBox="{x0} {y0} {vbox_width} {vbox_height}" ' \
     'width="{width}mm" height="{height}mm" ' \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
