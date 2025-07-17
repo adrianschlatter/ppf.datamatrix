@@ -85,9 +85,9 @@ class DataMatrix():
         for i,line in enumerate(mat):    
             for j,sym in enumerate(line):
                 if sym:
-                    yield f"<rect width='1' height='1' x='{i+1}' y='{j+1}' fill='{fg}' stroke='{fg}'>\n"
+                    yield f"\n<rect width='1' height='1' x='{i+1}' y='{j+1}' fill='{fg}' stroke='{fg}' />"
                 else:
-                    yield f"<rect width='1' height='1' x='{i+1}' y='{j+1}' fill='{bg}' stroke='{bg}'>\n"
+                    yield f"\n<rect width='1' height='1' x='{i+1}' y='{j+1}' fill='{bg}' stroke='{bg}' />"
 
     def svg(self, fg='#000', bg='#FFF', margin=1):
         """
