@@ -82,8 +82,8 @@ class DataMatrix():
         rects = ''.join(self._svg_rect_iterator(fg,bg,margin))
         
         mat = self.matrix
-        vbox_height = len(mat)*(height+margin*2)*2
-        vbox_width = len(mat[0])*(width+margin*2)*2
+        vbox_height = (len(mat)+margin*2)*2
+        vbox_width = (len(mat[0])+margin*2)*2
         height = render_size_mm[1]
         width = render_size_mm[0]
         
