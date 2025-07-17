@@ -13,10 +13,11 @@ __all__ = []
 
 from .utils import export
 
-svg_template = \
+# Template for generating closed-shape SVGs, for use with LightBurn and other etching software.
+svg_rects_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
-    'viewBox="{x0} {y0} {width} {height}" ' \
+    'viewBox="{x0} {y0} {vbx_width} {vbx_height}" ' \
     'width="{width}mm" height="{height}mm" ' \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
@@ -39,7 +40,8 @@ class DataMatrix():
     """
 
     def __init__(self, msg, rect=False,
-                 codecs=['ascii', 'C40', 'text', 'X12', 'edifact']):
+                 codecs=['ascii', 'C40', 'text', 'X12', 'edifact']:
+                     
         self.message = msg
         self.rectangular = rect
         for codec in codecs:
@@ -56,28 +58,6 @@ class DataMatrix():
     def _repr_svg_(self):
         return self.svg(bg='#000', fg='#FFF')
 
-    def _svg_path_iterator(self):
-        mat = self.matrix
-        w = len(mat[0])
-
-        for line in mat:
-            i = 0
-            while i < w:
-                color = line[i]
-                i0 = i
-                while i < w and line[i] == color:
-                    i = i + 1
-
-                length = i - i0
-                if color == 1:
-                    yield 'h'
-                    yield str(length)
-                else:
-                    yield 'm'
-                    yield f'{length},0'
-            yield 'm'
-            yield f'{-w},1'
-
     def _svg_rect_iterator(self,fg,bg):
         mat = self.matrix
         w = len(mat[0])
@@ -85,12 +65,10 @@ class DataMatrix():
         for i,line in enumerate(mat):    
             for j,sym in enumerate(line):
                 if sym==1:
-                    #yield f"\n<rect width='1' height='1' x='{j+1}' y='{i+1}' fill='{fg}' stroke='{fg}' />"
                     yield f"\n<rect width='2' height='2' x='{2*j+1}' y='{2*i+1}' fill='{fg}' />"
-                #else:
-                #    yield f"\n<rect width='1' height='1' x='{j+1}' y='{i+1}' fill='{bg}' stroke='{bg}' />"
 
-    def svg(self, fg='#000', bg='#FFF', margin=1):
+
+    def svg(self, fg='#000', bg='#FFF', margin=1, gen_rects=False, size="auto":
         """
         SVG of datamatrix.
 
@@ -100,8 +78,9 @@ class DataMatrix():
 
         Use the margin attribute to set the margin in units, defaults to 1.
         """
-        #cmds = ''.join(self._svg_path_iterator())
+        
         rects = ''.join(self._svg_rect_iterator(fg,bg))
+
         
         mat = self.matrix
         height = len(mat)
@@ -110,14 +89,23 @@ class DataMatrix():
         y0 = 1
 
         # margin is handled by adjusting the viewBox:
-        height += margin * 2
-        width += margin * 2
+        vbox_height += margin * 2
+        vbox_width += margin * 2
         x0 -= margin
         y0 -= margin
 
-        return svg_template.format(fg=fg, bg=bg, rects=rects,
-                                   x0=x0, y0=y0, height=2*height, width=2*width)
-
+        if size=="auto":
+            height = vbox_height
+            width = vbox_width
+        else:
+            width = size[0]
+            height = size[1]
+            
+        return svg_rects_template.format(fg=fg, bg=bg, rects=rects,
+                                x0=x0, y0=y0, 
+                                vbox_height=2*vbox_height, vbox_width=2*width,
+                                height=height, width=width)
+        
     @property
     def matrix(self):
         """
