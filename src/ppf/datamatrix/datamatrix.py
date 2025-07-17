@@ -23,7 +23,7 @@ svg_rects_template = \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
     'xmlns:xlink="http://www.w3.org/1999/xlink"' \
-    'transform="scale({x_scale,y_scale} >' \
+    'transform="scale({x_scale},{y_scale}) >' \
     '{rects}' \
     '</svg>'
 
