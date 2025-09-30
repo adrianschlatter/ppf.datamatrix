@@ -152,6 +152,9 @@ class Test_Save(unittest.TestCase):
         self.files_to_clean.append(path)
         self.dm.save(path)
         self.assertTrue(os.path.exists(path))
+        with open(path, 'rb') as f:
+            header = f.read(8)
+            self.assertTrue(header.startswith(b'\x89PNG'))
 
     def test_save_unsupported(self):
         """Test saving as unsupported file type."""
