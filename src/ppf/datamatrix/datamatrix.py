@@ -11,6 +11,9 @@ https://raw.githubusercontent.com/datalog/datamatrix-svg/master/datamatrix.js
 
 __all__ = []
 
+import struct
+import zlib
+
 from .utils import export
 
 svg_template = \
@@ -140,9 +143,6 @@ class DataMatrix():
         Use the margin attribute to set the margin in units, defaults to 1.
         Use module_size to set the size of the modules (pixels), defaults to 1.
         """
-        import zlib
-        import struct
-
         if isinstance(fg, str):
             fg = fg.lstrip('#')
             if len(fg) == 3:
