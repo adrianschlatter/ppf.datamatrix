@@ -104,6 +104,105 @@ class DataMatrix():
         return svg_template.format(fg=fg, bg=bg, path_cmds=cmds,
                                    x0=x0, y0=y0, height=height, width=width)
 
+    def save(self, path, fg='#000', bg='#FFF', margin=1, module_size=1):
+        """
+        Save datamatrix to file.
+
+        The file type is determined by the file extension. Supported file
+        types are .png and .svg.
+
+        Use fg and bg arguments to specify foreground and background color,
+        respectively. Colors are given as hex triplets such as fg='#F00'
+        (red) for SVG and as RGB triplets such as fg=(255, 0, 0) (red) for
+        PNG.
+
+        Use the margin attribute to set the margin in units, defaults to 1.
+        For PNGs, use module_size to set the module size in pixels, default is 1.
+        """
+        if path.endswith('.svg'):
+            with open(path, 'w') as f:
+                f.write(self.svg(fg=fg, bg=bg, margin=margin))
+        elif path.endswith('.png'):
+            with open(path, 'wb') as f:
+                f.write(self.png(fg=fg, bg=bg, margin=margin,
+                                 module_size=module_size))
+        else:
+            raise ValueError('Unsupported file type. Use .svg or .png')
+
+    def png(self, fg='#000', bg='#FFF', margin=1, module_size=1):
+        """
+        PNG of datamatrix.
+
+        Use fg and bg arguments to specify foreground and background color,
+        respectively. Colors can be given as hex strings (e.g., '#FF0000') or
+        as RGB triplets (e.g., (255, 0, 0)).
+
+        Use the margin attribute to set the margin in units, defaults to 1.
+        Use module_size to set the size of the modules (pixels), defaults to 1.
+        """
+        import zlib
+        import struct
+
+        if isinstance(fg, str):
+            fg = fg.lstrip('#')
+            if len(fg) == 3:
+                fg = ''.join(c*2 for c in fg)
+            fg = tuple(int(fg[i:i+2], 16) for i in (0, 2, 4))
+        if isinstance(bg, str):
+            bg = bg.lstrip('#')
+            if len(bg) == 3:
+                bg = ''.join(c*2 for c in bg)
+            bg = tuple(int(bg[i:i+2], 16) for i in (0, 2, 4))
+
+        mat = self.matrix
+        matrix_height = len(mat)
+        matrix_width = len(mat[0])
+
+        # Final image size
+        width = (matrix_width + margin * 2) * module_size
+        height = (matrix_height + margin * 2) * module_size
+
+        # PNG signature
+        png = b'\x89PNG\r\n\x1a\n'
+
+        # IHDR chunk
+        ihdr = struct.pack('!I4sIIBBBBB',
+                           13, b'IHDR', width, height, 8, 2, 0, 0, 0)
+        png += ihdr
+        crc_data = b'IHDR' + struct.pack('!IIBBBBB', width, height, 8, 2, 0, 0, 0)
+        png += struct.pack('!I', zlib.crc32(crc_data))
+
+        # IDAT chunk
+        raw_data = []
+        for r in range(height):
+            raw_data.append(0)  # filter type 0
+            y_mat = r // module_size - margin
+            for c in range(width):
+                x_mat = c // module_size - margin
+                if 0 <= y_mat < matrix_height and 0 <= x_mat < matrix_width:
+                    if mat[y_mat][x_mat]:
+                        raw_data.extend(fg)
+                    else:
+                        raw_data.extend(bg)
+                else:
+                    raw_data.extend(bg)
+
+        compressor = zlib.compressobj()
+        compressed_data = compressor.compress(bytes(raw_data))
+        compressed_data += compressor.flush()
+
+        idat = struct.pack('!I4s', len(compressed_data), b'IDAT')
+        idat += compressed_data
+        png += idat
+        png += struct.pack('!I', zlib.crc32(b'IDAT' + compressed_data))
+
+        # IEND chunk
+        iend = struct.pack('!I4s', 0, b'IEND')
+        png += iend
+        png += struct.pack('!I', zlib.crc32(b'IEND'))
+
+        return png
+
     @property
     def matrix(self):
         """

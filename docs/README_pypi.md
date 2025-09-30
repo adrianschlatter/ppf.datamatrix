@@ -1,7 +1,7 @@
 # ppf.datamatrix
 
-ppf.datamatrix is a pure-python package to generate datamatrix codes in SVG.
-Also, it integrates nicely in IPython.
+ppf.datamatrix is a pure-python package to generate datamatrix codes in SVG
+and PNG format. Also, it integrates nicely in IPython.
 
 ppf.datamatrix has been ported from [datalog's
 datamatrix-svg](https://github.com/datalog/datamatrix-svg), which is written in
@@ -10,7 +10,7 @@ their [nice web demo](https://datalog.github.io/demo/datamatrix-svg).
 
 Creating a datamatrix with ppf.datamatrix is as easy as
 
-```
+```python
 from ppf.datamatrix import DataMatrix
 
 myDataMatrix = DataMatrix('Test!')
