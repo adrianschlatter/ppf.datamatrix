@@ -56,6 +56,9 @@ class DataMatrix():
         """Return a text representation of this object."""
         return f"DataMatrix('{self.message}')"
 
+    def _repr_png_(self):
+        return self.png(bg='#000', fg='#FFF', module_size=4)
+
     def _repr_svg_(self):
         return self.svg(bg='#000', fg='#FFF')
 
