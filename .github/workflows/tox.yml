@@ -10,7 +10,7 @@ on:
   workflow_dispatch:     # to trigger workflow manually
 
 jobs:
-  tox_on_ubuntu-22.04:
+  tox_on_ubuntu_new:
 
     runs-on: ubuntu-22.04
     strategy:
@@ -29,7 +29,7 @@ jobs:
         # Run tox using the version of Python in `PATH`
         run: tox -e py
 
-  tox_on_ubuntu-20.04:
+  tox_on_ubuntu_old:
 
     runs-on: ubuntu-20.04
     strategy:
