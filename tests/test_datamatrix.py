@@ -125,6 +125,43 @@ class Test_CornerCases(unittest.TestCase):
             self.assertTrue(len(datamatrix.matrix) > 0)
 
 
+class Test_Save(unittest.TestCase):
+    """Test saving datamatrix to file."""
+
+    def setUp(self):
+        self.dm = put.DataMatrix('A')
+        self.files_to_clean = []
+
+    def tearDown(self):
+        import os
+        for f in self.files_to_clean:
+            os.remove(f)
+
+    def test_save_svg(self):
+        """Test saving as SVG."""
+        import os
+        path = 'test.svg'
+        self.files_to_clean.append(path)
+        self.dm.save(path)
+        self.assertTrue(os.path.exists(path))
+
+    def test_save_png(self):
+        """Test saving as PNG."""
+        import os
+        path = 'test.png'
+        self.files_to_clean.append(path)
+        self.dm.save(path)
+        self.assertTrue(os.path.exists(path))
+        with open(path, 'rb') as f:
+            header = f.read(8)
+            self.assertTrue(header.startswith(b'\x89PNG'))
+
+    def test_save_unsupported(self):
+        """Test saving as unsupported file type."""
+        with self.assertRaises(ValueError):
+            self.dm.save('test.txt')
+
+
 if __name__ == '__main__':
     # This enables running the unit tests by running this script which is
     # much more convenient than 'python setup.py test' while developing tests.

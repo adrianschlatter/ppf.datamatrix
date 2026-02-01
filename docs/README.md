@@ -12,7 +12,7 @@ their [nice web demo](https://datalog.github.io/demo/datamatrix-svg).
 
 Creating a datamatrix with ppf.datamatrix is as easy as
 
-```
+```python
 from ppf.datamatrix import DataMatrix
 
 myDataMatrix = DataMatrix('Test!')
@@ -25,10 +25,24 @@ datamatrix immediately:
 
 Using the DataMatrix object, you get the SVG source like this:
 
-```
+```python
 myDataMatrix.svg()
 
 '<?xml version="1.0" encoding="utf-8" ?><svg ...'
+```
+
+To save your datamatrix to a file, use the `save` method. The file type is
+determined automatically from the file extension.
+
+```python
+# To save as an SVG file
+myDataMatrix.save('my_datamatrix.svg')
+
+# To save as a PNG file
+myDataMatrix.save('my_datamatrix.png')
+
+# You can also scale the PNG by specifying the module size
+myDataMatrix.save('my_datamatrix_large.png', module_size=10)
 ```
 
 <img alt="Test! DataMatrix" src="./imgs/Test.svg" width="50em">
@@ -38,7 +52,7 @@ whatever you like.  Background and foreground color are configurable by
 specifying fg and/or bg arguments.  Create a light blue matrix on a petrol
 background like this:
 
-```
+```python
 myDataMatrix.svg(fg='#EEF', bg='#09D')
 ```
 
@@ -62,7 +76,7 @@ advanced stuff (designing your own form of matrix code, maybe), ppf.datamatrix
 enables you to use its encoders.  After importing ppf.datamatrix, they are
 available via the python codecs system:
 
-```
+```python
 import ppf.datamatrix
 
 encoded = 'TEST'.encode('datamatrix.edifact')
@@ -78,7 +92,7 @@ Furthermore it is possible to tell the DataMatrix class which codecs to use.
 The default is to try all valid datamatrix codecs and select the one
 resulting in the shortest code. This line:
 
-```
+```python
 myDataMatrix = DataMatrix('Test!', codecs=['C40', 'edifact'])
 ```
 
@@ -91,7 +105,7 @@ encoding.
 
 ppf.datamatrix is available via [pypi](https://pypi.org):
 
-```
+```python
 pip install ppf.datamatrix
 ```
 
