@@ -5,15 +5,14 @@ DataMatrix class resides here.
 
 Ported from:
 https://raw.githubusercontent.com/datalog/datamatrix-svg/master/datamatrix.js
-
-.. author: Adrian Schlatter
 """
 
 __all__ = []
 
 from .utils import export
 
-svg_template = \
+# template for representing datamatrix as SVG based on one cell wide line path:
+svg_line_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
     'viewBox="{x0} {y0} {width} {height}" ' \
@@ -25,8 +24,9 @@ svg_template = \
     '<path d="M1,1.5 {path_cmds}" ' \
     'stroke="{fg}" stroke-width="1"/></svg>'
 
-# Template for generating closed-shape SVGs, for use with LightBurn and other etching software.
-svg_rects_template = \
+# template for representing datamatrix as SVG based on <rect> for every
+# black cell:
+svg_shape_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
     'viewBox="0 0 {vbox_width} {vbox_height}" ' \
@@ -91,14 +91,14 @@ class DataMatrix():
             yield 'm'
             yield f'{-w},1'
 
-    def _svg_rect_iterator(self,fg,bg,margin):
+    def _svg_rect_iterator(self, fg, bg, margin):
         mat = self.matrix
-        w = len(mat[0])
 
-        for i,line in enumerate(mat):    
-            for j,sym in enumerate(line):
-                if sym==1:
-                    yield f"\n<rect width='2' height='2' x='{2*(j+margin)}' y='{2*(i+margin)}' fill='{fg}' />"
+        for i, line in enumerate(mat):
+            for j, sym in enumerate(line):
+                if sym == 1:
+                    yield (f"\n<rect width='2' height='2' x='{2*(j+margin)}' "
+                           f"y='{2*(i+margin)}' fill='{fg}' />")
 
     def svg(self, fg='#000', bg='#FFF', margin=1):
         """
@@ -123,10 +123,12 @@ class DataMatrix():
         x0 -= margin
         y0 -= margin
 
-        return svg_template.format(fg=fg, bg=bg, path_cmds=cmds,
-                                   x0=x0, y0=y0, height=height, width=width)
+        return svg_line_template.format(
+                                    fg=fg, bg=bg, path_cmds=cmds,
+                                    x0=x0, y0=y0, height=height, width=width)
 
-    def svg_rect(self, fg='#000', bg='#FFF', margin=1, render_size_mm=(12,12)):
+    def svg_rect(self, fg='#000', bg='#FFF', margin=1,
+                 render_size_mm=(12, 12)):
         """
         SVG of datamatrix.
 
@@ -136,21 +138,20 @@ class DataMatrix():
 
         Use the margin attribute to set the margin in units, defaults to 1.
         """
-        
-        rects = ''.join(self._svg_rect_iterator(fg,bg,margin))
-        
+
+        rects = ''.join(self._svg_rect_iterator(fg, bg, margin))
+
         mat = self.matrix
-        vbox_height = (len(mat)+margin*2)*2
-        vbox_width = (len(mat[0])+margin*2)*2
+        vbox_height = (len(mat) + margin * 2) * 2
+        vbox_width = (len(mat[0]) + margin * 2) * 2
         height = render_size_mm[1]
         width = render_size_mm[0]
-        
-        return svg_rects_template.format(fg=fg, bg=bg, 
-                                rects=rects,
-                                vbox_width = vbox_width,
-                                vbox_height = vbox_height,
+
+        return svg_shape_template.format(
+                                fg=fg, bg=bg, rects=rects,
+                                vbox_width=vbox_width, vbox_height=vbox_height,
                                 height=height, width=width)
-        
+
     @property
     def matrix(self):
         """
