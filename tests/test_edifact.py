@@ -34,6 +34,16 @@ class Test_datamatrix_edifact(Codec_Test, unittest.TestCase):
         enc = msg.encode('datamatrix.edifact')
         self.assertEqual(msg, enc.decode('datamatrix.edifact'))
 
+    def test_invalid_code(self):
+        """
+        Craft invalid code, try to decode it.
+        """
+        enc = b'\xf0\x02'
+        # This should raise ValueError (because of invalid code), *not*
+        # IndexError (because our decoding routine tries to read beyond the end
+        # of the code):
+        self.assertRaises(ValueError, enc.decode, 'datamatrix.edifact')
+
 
 if __name__ == '__main__':
     # This enables running the unit tests by running this script which is

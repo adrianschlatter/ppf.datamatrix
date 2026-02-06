@@ -70,7 +70,7 @@ def decode(enc):
     raw = []
     edifact.pop(0)
     ascii = b''
-    while len(edifact) > 0:
+    while len(edifact) >= 3:
         word = edifact.pop(0) << 16
         word += edifact.pop(0) << 8
         word += edifact.pop(0) << 0
@@ -80,9 +80,16 @@ def decode(enc):
         if 0x1F in newraw:
             raw += newraw[:newraw.index(0x1F)]
             ascii = bytes(edifact)
+            # make sure we do not trip the error-catching 'if' below:
+            edifact = []
             break
         else:
             raw += newraw
+
+    if len(edifact) > 0:
+        raise ValueError(
+            f'Trailing bytes {bytes(edifact)} after EDIFACT data'
+            f'in {bytes(enc)}')
 
     msg = bytes([code if code >= 0x20 else code | 0x40
                  for code in raw]).decode('ascii')
