@@ -11,8 +11,7 @@ __all__ = []
 
 from .utils import export
 
-# template for representing datamatrix as SVG based on one cell wide line path:
-svg_line_template = \
+svg_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
     'viewBox="{x0} {y0} {vbox_width} {vbox_height}" ' \
@@ -20,22 +19,8 @@ svg_line_template = \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
-    'xmlns:xlink="http://www.w3.org/1999/xlink">' \
-    '<path d="M1,1.5 {path_cmds}" ' \
-    'stroke="{fg}" stroke-width="1"/></svg>'
-
-# template for representing datamatrix as SVG based on <rect> for every
-# black cell:
-svg_shape_template = \
-    '<?xml version="1.0" encoding="utf-8" ?>' \
-    '<svg baseProfile="tiny" version="1.2" ' \
-    'viewBox="0 0 {vbox_width} {vbox_height}" ' \
-    'width="{phys_width}mm" height="{phys_height}mm" ' \
-    'style="background-color:{bg}" ' \
-    'xmlns="http://www.w3.org/2000/svg" ' \
-    'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
     'xmlns:xlink="http://www.w3.org/1999/xlink" >' \
-    '{rects}' \
+    '{matrix}' \
     '</svg>'
 
 
@@ -73,6 +58,8 @@ class DataMatrix():
         mat = self.matrix
         w = len(mat[0])
 
+        yield '<path d="M1,1.5 '
+
         for line in mat:
             i = 0
             while i < w:
@@ -90,6 +77,8 @@ class DataMatrix():
                     yield f'{length},0'
             yield 'm'
             yield f'{-w},1'
+
+        yield '" stroke="{fg}" stroke-width="1"/>'
 
     def _svg_rect_iterator(self, fg, bg, margin):
         mat = self.matrix
@@ -128,9 +117,9 @@ class DataMatrix():
 
         # generate datamatrix:
         if geom == 'line':
-            cmds = ''.join(self._svg_path_iterator())
+            matrix = ''.join(self._svg_path_iterator())
         elif geom == 'rect':
-            rects = ''.join(self._svg_rect_iterator(fg, bg, margin))
+            matrix = ''.join(self._svg_rect_iterator(fg, bg, margin))
         else:
             raise NotImplementedError(f"geom='{geom}' not implemented")
 
@@ -141,15 +130,16 @@ class DataMatrix():
         y0 -= margin
 
         if geom == 'line':
-            return svg_line_template.format(
-                        fg=fg, bg=bg, path_cmds=cmds, x0=x0, y0=y0,
+            return svg_template.format(
+                        fg=fg, bg=bg, matrix=matrix, x0=x0, y0=y0,
                         vbox_height=vbox_height, vbox_width=vbox_width,
                         phys_height=vbox_height * cell_size_mm,  # units of mm
                         phys_width=vbox_width * cell_size_mm)
         else:  # geom == 'rect'
-            return svg_shape_template.format(
-                        fg=fg, bg=bg, rects=rects,
-                        vbox_width=vbox_width, vbox_height=vbox_height,
+            return svg_template.format(
+                        fg=fg, bg=bg, matrix=matrix, x0=0, y0=0,
+                        vbox_width=vbox_width,
+                        vbox_height=vbox_height,
                         phys_height=vbox_height * cell_size_mm,  # units of mm
                         phys_width=vbox_width * cell_size_mm)
 
