@@ -80,14 +80,14 @@ class DataMatrix():
 
         yield '" stroke="{fg}" stroke-width="1"/>'
 
-    def _svg_rect_iterator(self, fg, bg, margin):
+    def _svg_rect_iterator(self, fg, bg):
         mat = self.matrix
 
         for i, line in enumerate(mat):
             for j, sym in enumerate(line):
                 if sym == 1:
-                    yield (f'\n<rect width="1" height="1" x="{j+margin}" '
-                           f'y="{i+margin}" fill="{fg}"/>')
+                    yield (f'\n<rect width="1" height="1" x="{j + 1}" '
+                           f'y="{i + 1}" fill="{fg}"/>')
 
     def svg(self, fg='#000', bg='#FFF', margin=1, geom='line', cell_size_mm=1):
         """
@@ -119,7 +119,7 @@ class DataMatrix():
         if geom == 'line':
             matrix = ''.join(self._svg_path_iterator())
         elif geom == 'rect':
-            matrix = ''.join(self._svg_rect_iterator(fg, bg, margin))
+            matrix = ''.join(self._svg_rect_iterator(fg, bg))
         else:
             raise NotImplementedError(f"geom='{geom}' not implemented")
 
@@ -137,7 +137,7 @@ class DataMatrix():
                         phys_width=vbox_width * cell_size_mm)
         else:  # geom == 'rect'
             return svg_template.format(
-                        fg=fg, bg=bg, matrix=matrix, x0=0, y0=0,
+                        fg=fg, bg=bg, matrix=matrix, x0=x0, y0=y0,
                         vbox_width=vbox_width,
                         vbox_height=vbox_height,
                         phys_height=vbox_height * cell_size_mm,  # units of mm
