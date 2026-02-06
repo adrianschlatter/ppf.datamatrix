@@ -97,8 +97,8 @@ class DataMatrix():
         for i, line in enumerate(mat):
             for j, sym in enumerate(line):
                 if sym == 1:
-                    yield (f"\n<rect width='2' height='2' x='{2*(j+margin)}' "
-                           f"y='{2*(i+margin)}' fill='{fg}' />")
+                    yield (f"\n<rect width='1' height='1' x='{j+margin}' "
+                           f"y='{i+margin}' fill='{fg}' />")
 
     def svg(self, fg='#000', bg='#FFF', margin=1, geom='line', cell_size_mm=1):
         """
@@ -149,7 +149,7 @@ class DataMatrix():
         else:  # geom == 'rect'
             return svg_shape_template.format(
                         fg=fg, bg=bg, rects=rects,
-                        vbox_width=vbox_width * 2, vbox_height=vbox_height * 2,
+                        vbox_width=vbox_width, vbox_height=vbox_height,
                         phys_height=vbox_height * cell_size_mm,  # units of mm
                         phys_width=vbox_width * cell_size_mm)
 
