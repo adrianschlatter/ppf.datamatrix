@@ -88,6 +88,7 @@ class DataMatrix():
                 if sym == 1:
                     yield (f'\n<rect width="1" height="1" x="{j + 1}" '
                            f'y="{i + 1}" fill="{fg}"/>')
+        yield '\n'
 
     def svg(self, fg='#000', bg='#FFF', margin=1, geom='line', cell_size_mm=1):
         """

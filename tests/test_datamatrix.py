@@ -73,7 +73,7 @@ svg_rect_of_T = (
     '<rect width="1" height="1" x="7" y="10" fill="#000"/>\n'
     '<rect width="1" height="1" x="8" y="10" fill="#000"/>\n'
     '<rect width="1" height="1" x="9" y="10" fill="#000"/>\n'
-    '<rect width="1" height="1" x="10" y="10" fill="#000"/>'
+    '<rect width="1" height="1" x="10" y="10" fill="#000"/>\n'
     '</svg>')
 
 
