@@ -26,12 +26,12 @@ class Test_datamatrix_edifact(Codec_Test, unittest.TestCase):
 
     def test_31(self):
         """
-        Encode  msg resulting in EDIFACT [240, 31, 31, 31].
+        Encode msg resulting in EDIFACT [240, 31, 31, 31].
 
         Note: 31 is 'Return to ASCII Mode'
         """
         msg = 'G1<'
-        enc = 'G1<'.encode('datamatrix.edifact')
+        enc = msg.encode('datamatrix.edifact')
         self.assertEqual(msg, enc.decode('datamatrix.edifact'))
 
 
