@@ -153,31 +153,6 @@ class DataMatrix():
                         phys_height=vbox_height * cell_size_mm,  # units of mm
                         phys_width=vbox_width * cell_size_mm)
 
-    def svg_rect(self, fg='#000', bg='#FFF', margin=1,
-                 render_size_mm=(12, 12)):
-        """
-        SVG of datamatrix.
-
-        Use fg and bg arguments to specify foreground and background color,
-        respectively. Colors are given as hex triplets such as fg='#F00'
-        (red).
-
-        Use the margin attribute to set the margin in units, defaults to 1.
-        """
-
-        rects = ''.join(self._svg_rect_iterator(fg, bg, margin))
-
-        mat = self.matrix
-        vbox_height = (len(mat) + margin * 2) * 2
-        vbox_width = (len(mat[0]) + margin * 2) * 2
-        height = render_size_mm[1]
-        width = render_size_mm[0]
-
-        return svg_shape_template.format(
-                                fg=fg, bg=bg, rects=rects,
-                                vbox_width=vbox_width, vbox_height=vbox_height,
-                                phys_height=height, phys_width=width)
-
     @property
     def matrix(self):
         """

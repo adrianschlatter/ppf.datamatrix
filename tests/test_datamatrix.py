@@ -178,12 +178,6 @@ class Test_CornerCases(unittest.TestCase):
         m = put.DataMatrix('~' * 50, rect=True).matrix
         self.assertTrue(len(m) == len(m[0]))
 
-    def test_svg_rect(self):
-        dm = put.DataMatrix('T')
-        self.assertTrue(len(dm.matrix) == 10)
-
-        self.assertEqual(dm.svg_rect(), svg_rect_of_T)
-
     def test_geom_invalid(self):
         dm = put.DataMatrix('T')
 
