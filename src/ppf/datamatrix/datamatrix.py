@@ -87,7 +87,7 @@ class DataMatrix():
             for j, sym in enumerate(line):
                 if sym == 1:
                     yield (f'\n<rect width="1" height="1" x="{j+margin}" '
-                           f'y="{i+margin}" fill="{fg}" />')
+                           f'y="{i+margin}" fill="{fg}"/>')
 
     def svg(self, fg='#000', bg='#FFF', margin=1, geom='line', cell_size_mm=1):
         """
