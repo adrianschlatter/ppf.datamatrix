@@ -2,7 +2,7 @@
 """
 Unittests
 
-Verify that datamatrix.C40 codec works as expected
+Verify that datamatrix.codec_common works as expected
 
 .. author: Adrian Schlatter
 """
