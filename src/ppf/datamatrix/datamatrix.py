@@ -100,7 +100,7 @@ class DataMatrix():
                     yield (f"\n<rect width='2' height='2' x='{2*(j+margin)}' "
                            f"y='{2*(i+margin)}' fill='{fg}' />")
 
-    def svg(self, fg='#000', bg='#FFF', margin=1):
+    def svg(self, fg='#000', bg='#FFF', margin=1, geom='line'):
         """
         SVG of datamatrix.
 
@@ -109,13 +109,26 @@ class DataMatrix():
         (red).
 
         Use the margin attribute to set the margin in units, defaults to 1.
+
+        Use the geom attribute to select between 'line' and 'rect' format
+        output. Both produce SVG, but line uses a single path painting over the
+        pixels (stroke-width = cell width), while rect uses one <rect> per
+        (black) pixel.
         """
-        cmds = ''.join(self._svg_path_iterator())
+        # prepare:
         mat = self.matrix
         height = len(mat)
         width = len(mat[0])
         x0 = 1
         y0 = 1
+
+        # generate datamatrix:
+        if geom == 'line':
+            cmds = ''.join(self._svg_path_iterator())
+        elif geom == 'rect':
+            rects = ''.join(self._svg_rect_iterator(fg, bg, margin))
+        else:
+            raise NotImplementedError(f"geom='{geom}' not implemented")
 
         # margin is handled by adjusting the viewBox:
         height += margin * 2
@@ -123,9 +136,17 @@ class DataMatrix():
         x0 -= margin
         y0 -= margin
 
-        return svg_line_template.format(
+        if geom == 'line':
+            return svg_line_template.format(
                                     fg=fg, bg=bg, path_cmds=cmds,
                                     x0=x0, y0=y0, height=height, width=width)
+        else:  # geom == 'rect'
+            vbox_height = (len(mat) + margin * 2) * 2
+            vbox_width = (len(mat[0]) + margin * 2) * 2
+            return svg_shape_template.format(
+                            fg=fg, bg=bg, rects=rects,
+                            vbox_width=vbox_width, vbox_height=vbox_height,
+                            height=height, width=width)
 
     def svg_rect(self, fg='#000', bg='#FFF', margin=1,
                  render_size_mm=(12, 12)):
