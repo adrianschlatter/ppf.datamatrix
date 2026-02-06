@@ -15,8 +15,8 @@ from .utils import export
 svg_line_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
-    'viewBox="{x0} {y0} {width} {height}" ' \
-    'width="{width}mm" height="{height}mm" ' \
+    'viewBox="{x0} {y0} {vbox_width} {vbox_height}" ' \
+    'width="{phys_width}mm" height="{phys_height}mm" ' \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
@@ -30,7 +30,7 @@ svg_shape_template = \
     '<?xml version="1.0" encoding="utf-8" ?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
     'viewBox="0 0 {vbox_width} {vbox_height}" ' \
-    'width="{width}mm" height="{height}mm" ' \
+    'width="{phys_width}mm" height="{phys_height}mm" ' \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
@@ -100,7 +100,7 @@ class DataMatrix():
                     yield (f"\n<rect width='2' height='2' x='{2*(j+margin)}' "
                            f"y='{2*(i+margin)}' fill='{fg}' />")
 
-    def svg(self, fg='#000', bg='#FFF', margin=1, geom='line'):
+    def svg(self, fg='#000', bg='#FFF', margin=1, geom='line', cell_size_mm=1):
         """
         SVG of datamatrix.
 
@@ -108,12 +108,16 @@ class DataMatrix():
         respectively. Colors are given as hex triplets such as fg='#F00'
         (red).
 
-        Use the margin attribute to set the margin in units, defaults to 1.
+        Use the margin attribute to set the margin in units of cells, defaults
+        to 1.
 
         Use the geom attribute to select between 'line' and 'rect' format
         output. Both produce SVG, but line uses a single path painting over the
         pixels (stroke-width = cell width), while rect uses one <rect> per
         (black) pixel.
+
+        cell_size_mm defines the size of one cell in Millimeters. Set this
+        accordingly if the physical size of the datamatrix is relevant.
         """
         # prepare:
         mat = self.matrix
@@ -131,22 +135,23 @@ class DataMatrix():
             raise NotImplementedError(f"geom='{geom}' not implemented")
 
         # margin is handled by adjusting the viewBox:
-        height += margin * 2
-        width += margin * 2
+        vbox_height = height + margin * 2  # in units of cells
+        vbox_width = width + margin * 2
         x0 -= margin
         y0 -= margin
 
         if geom == 'line':
             return svg_line_template.format(
-                                    fg=fg, bg=bg, path_cmds=cmds,
-                                    x0=x0, y0=y0, height=height, width=width)
+                        fg=fg, bg=bg, path_cmds=cmds, x0=x0, y0=y0,
+                        vbox_height=vbox_height, vbox_width=vbox_width,
+                        phys_height=vbox_height * cell_size_mm,  # units of mm
+                        phys_width=vbox_width * cell_size_mm)
         else:  # geom == 'rect'
-            vbox_height = (len(mat) + margin * 2) * 2
-            vbox_width = (len(mat[0]) + margin * 2) * 2
             return svg_shape_template.format(
-                            fg=fg, bg=bg, rects=rects,
-                            vbox_width=vbox_width, vbox_height=vbox_height,
-                            height=height, width=width)
+                        fg=fg, bg=bg, rects=rects,
+                        vbox_width=vbox_width * 2, vbox_height=vbox_height * 2,
+                        phys_height=vbox_height * cell_size_mm,  # units of mm
+                        phys_width=vbox_width * cell_size_mm)
 
     def svg_rect(self, fg='#000', bg='#FFF', margin=1,
                  render_size_mm=(12, 12)):
@@ -171,7 +176,7 @@ class DataMatrix():
         return svg_shape_template.format(
                                 fg=fg, bg=bg, rects=rects,
                                 vbox_width=vbox_width, vbox_height=vbox_height,
-                                height=height, width=width)
+                                phys_height=height, phys_width=width)
 
     @property
     def matrix(self):
