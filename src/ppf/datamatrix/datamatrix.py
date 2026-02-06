@@ -130,19 +130,12 @@ class DataMatrix():
         x0 -= margin
         y0 -= margin
 
-        if geom == 'line':
-            return svg_template.format(
-                        fg=fg, bg=bg, matrix=matrix, x0=x0, y0=y0,
-                        vbox_height=vbox_height, vbox_width=vbox_width,
-                        phys_height=vbox_height * cell_size_mm,  # units of mm
-                        phys_width=vbox_width * cell_size_mm)
-        else:  # geom == 'rect'
-            return svg_template.format(
-                        fg=fg, bg=bg, matrix=matrix, x0=x0, y0=y0,
-                        vbox_width=vbox_width,
-                        vbox_height=vbox_height,
-                        phys_height=vbox_height * cell_size_mm,  # units of mm
-                        phys_width=vbox_width * cell_size_mm)
+        return svg_template.format(
+                    fg=fg, bg=bg, matrix=matrix, x0=x0, y0=y0,
+                    vbox_height=vbox_height,                 # units of cells
+                    vbox_width=vbox_width,
+                    phys_height=vbox_height * cell_size_mm,  # units of mm
+                    phys_width=vbox_width * cell_size_mm)
 
     @property
     def matrix(self):
