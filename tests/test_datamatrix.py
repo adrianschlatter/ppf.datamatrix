@@ -115,6 +115,75 @@ class Test_CornerCases(unittest.TestCase):
         m = put.DataMatrix('~' * 50, rect=True).matrix
         self.assertTrue(len(m) == len(m[0]))
 
+    def test_svg_rect(self):
+        dm = put.DataMatrix('T')
+        self.assertTrue(len(dm.matrix) == 10)
+
+        good = (
+            '<?xml version="1.0" encoding="utf-8" ?>'
+            '<svg baseProfile="tiny" version="1.2" viewBox="0 0 24 24" '
+            'width="12mm" height="12mm" style="background-color:#FFF" '
+            'xmlns="http://www.w3.org/2000/svg" '
+            'xmlns:ev="http://www.w3.org/2001/xml-events" '
+            'xmlns:xlink="http://www.w3.org/1999/xlink" >\n'
+            '<rect width=\'2\' height=\'2\' x=\'2\' y=\'2\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'6\' y=\'2\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'10\' y=\'2\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'14\' y=\'2\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'18\' y=\'2\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'2\' y=\'4\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'4\' y=\'4\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'8\' y=\'4\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'10\' y=\'4\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'16\' y=\'4\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'18\' y=\'4\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'20\' y=\'4\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'2\' y=\'6\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'10\' y=\'6\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'12\' y=\'6\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'14\' y=\'6\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'18\' y=\'6\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'2\' y=\'8\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'8\' y=\'8\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'10\' y=\'8\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'12\' y=\'8\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'14\' y=\'8\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'18\' y=\'8\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'20\' y=\'8\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'2\' y=\'10\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'18\' y=\'10\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'2\' y=\'12\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'4\' y=\'12\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'12\' y=\'12\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'16\' y=\'12\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'20\' y=\'12\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'2\' y=\'14\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'8\' y=\'14\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'10\' y=\'14\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'12\' y=\'14\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'2\' y=\'16\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'10\' y=\'16\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'12\' y=\'16\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'14\' y=\'16\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'20\' y=\'16\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'2\' y=\'18\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'4\' y=\'18\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'6\' y=\'18\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'18\' y=\'18\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'2\' y=\'20\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'4\' y=\'20\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'6\' y=\'20\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'8\' y=\'20\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'10\' y=\'20\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'12\' y=\'20\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'14\' y=\'20\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'16\' y=\'20\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'18\' y=\'20\' fill=\'#000\' />\n'
+            '<rect width=\'2\' height=\'2\' x=\'20\' y=\'20\' fill=\'#000\' />'
+            '</svg>')
+
+        self.assertEqual(dm.svg_rect(), good)
+
     @unittest.skip
     def test_random_messages(self):
         """Test random messages."""
