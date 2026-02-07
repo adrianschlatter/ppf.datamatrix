@@ -13,7 +13,13 @@ Example:
     svg = my_matrix.svg()
 """
 
-__version__ = '0.2'
+try:
+    from importlib_metadata import version
+except ImportError:                                     # pragma: no cover
+    from importlib.metadata import version              # pragma: no cover
+
+
+__version__ = version(__name__)
 
 # register codecs
 from .codec_ascii import *
