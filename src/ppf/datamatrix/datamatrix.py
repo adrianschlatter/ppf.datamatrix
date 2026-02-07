@@ -102,9 +102,9 @@ class DataMatrix():
         to 1.
 
         Use the geom attribute to select between 'line' and 'rect' format
-        output. Both produce SVG, but line uses a single path painting over the
-        pixels (stroke-width = cell width), while rect uses one <rect> per
-        (black) pixel.
+        output. Both produce SVG, but 'line' uses a single path painting over
+        the pixels (stroke-width = cell width), while 'rect' uses one <rect>
+        per pixel.
 
         cell_size_mm defines the size of one cell in Millimeters. Set this
         accordingly if the physical size of the datamatrix is relevant.
