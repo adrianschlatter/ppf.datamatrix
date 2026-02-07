@@ -28,7 +28,7 @@ Using the DataMatrix object, you get the SVG source like this:
 
 ```python
 >>> myDataMatrix.svg()  # doctest: +ELLIPSIS
-'<?xml version="1.0" encoding="utf-8" ?><svg ...'
+'<?xml version="1.0" encoding="utf-8" ?>...<path d="M1,1.5 h1m1,0h1m1,...'
 
 ```
 
@@ -48,6 +48,25 @@ background like this:
 Note: This sets the colors of the SVG.
 It does *not* change the color of the representation inside your IPython
 terminal.
+
+Furthermore, you can tweak the SVG output: By default, `ppf.datamatrix` creates
+very compact SVG code suitable for most uses. However, if you want to use the
+datamatrix code for, e.g., laser engraving, you might need an SVG that draws
+every cell of the matrix as a closed shape, such as a rectangle:
+
+```python
+>>> print(myDataMatrix.svg(geom='rect'))    # doctest: +ELLIPSIS
+<?xml version="1.0" encoding="utf-8" ?><svg baseProfile="tiny" version="1.2" viewBox="0 0 14 14" width="14mm" height="14mm" style="background-color:#FFF" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink" >
+<rect width="1" height="1" x="1" y="1" fill="#000"/>
+<rect width="1" height="1" x="3" y="1" fill="#000"/>
+<rect width="1" height="1" x="5" y="1" fill="#000"/>
+...
+
+```
+
+When viewed on screen, there are no visible differences between the default and
+the 'rect' geometry. You can the specify the margin and the (physical) size of
+the datamatrix cells as well, check the documentation.
 
 
 ## Advanced Features
