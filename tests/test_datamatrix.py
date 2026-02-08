@@ -13,67 +13,81 @@ import unittest
 import random
 from .common import EDIFACT, ASCII
 
-svg_rect_of_T = (
+# output of ppf.datamatrix.DataMatrix('T').svg() as of v0.2:
+# (if we deviate from this, we break backward compatibility)
+svg_line_of_T_v0_2_0 = (
     '<?xml version="1.0" encoding="utf-8" ?>'
-    '<svg baseProfile="tiny" version="1.2" viewBox="0 0 12 12" '
+    '<svg baseProfile="tiny" version="1.2" height="12px" width="12px" '
+    'style="background-color:#FFF" xmlns="http://www.w3.org/2000/svg" '
+    'xmlns:ev="http://www.w3.org/2001/xml-events" '
+    'xmlns:xlink="http://www.w3.org/1999/xlink">'
+    '<path d="M1,1.5 h1m1,0h1m1,0h1m1,0h1m1,0h1m1,0m-10,1h2m1,0h2m2,0h3m-10,'
+    '1h1m3,0h3m1,0h1m1,0m-10,1h1m2,0h4m1,0h2m-10,1h1m7,0h1m1,0m-10,1h2m3,'
+    '0h1m1,0h1m1,0h1m-10,1h1m2,0h3m4,0m-10,1h1m3,0h3m2,0h1m-10,1h3m5,0h1m1,'
+    '0m-10,1h10m-10,1" stroke="#000" stroke-width="1"/>'
+    '</svg>')
+
+svg_rect_of_T = (
+    '<?xml version="1.0" encoding="utf-8"?>'
+    '<svg baseProfile="tiny" version="1.2" viewBox="-1 -1 12 12" '
     'width="12mm" height="12mm" style="background-color:#FFF" '
     'xmlns="http://www.w3.org/2000/svg" '
     'xmlns:ev="http://www.w3.org/2001/xml-events" '
-    'xmlns:xlink="http://www.w3.org/1999/xlink" >\n'
+    'xmlns:xlink="http://www.w3.org/1999/xlink">\n'
+    '<rect width="1" height="1" x="0" y="0" fill="#000"/>\n'
+    '<rect width="1" height="1" x="2" y="0" fill="#000"/>\n'
+    '<rect width="1" height="1" x="4" y="0" fill="#000"/>\n'
+    '<rect width="1" height="1" x="6" y="0" fill="#000"/>\n'
+    '<rect width="1" height="1" x="8" y="0" fill="#000"/>\n'
+    '<rect width="1" height="1" x="0" y="1" fill="#000"/>\n'
     '<rect width="1" height="1" x="1" y="1" fill="#000"/>\n'
     '<rect width="1" height="1" x="3" y="1" fill="#000"/>\n'
-    '<rect width="1" height="1" x="5" y="1" fill="#000"/>\n'
+    '<rect width="1" height="1" x="4" y="1" fill="#000"/>\n'
     '<rect width="1" height="1" x="7" y="1" fill="#000"/>\n'
+    '<rect width="1" height="1" x="8" y="1" fill="#000"/>\n'
     '<rect width="1" height="1" x="9" y="1" fill="#000"/>\n'
-    '<rect width="1" height="1" x="1" y="2" fill="#000"/>\n'
-    '<rect width="1" height="1" x="2" y="2" fill="#000"/>\n'
+    '<rect width="1" height="1" x="0" y="2" fill="#000"/>\n'
     '<rect width="1" height="1" x="4" y="2" fill="#000"/>\n'
     '<rect width="1" height="1" x="5" y="2" fill="#000"/>\n'
+    '<rect width="1" height="1" x="6" y="2" fill="#000"/>\n'
     '<rect width="1" height="1" x="8" y="2" fill="#000"/>\n'
-    '<rect width="1" height="1" x="9" y="2" fill="#000"/>\n'
-    '<rect width="1" height="1" x="10" y="2" fill="#000"/>\n'
-    '<rect width="1" height="1" x="1" y="3" fill="#000"/>\n'
+    '<rect width="1" height="1" x="0" y="3" fill="#000"/>\n'
+    '<rect width="1" height="1" x="3" y="3" fill="#000"/>\n'
+    '<rect width="1" height="1" x="4" y="3" fill="#000"/>\n'
     '<rect width="1" height="1" x="5" y="3" fill="#000"/>\n'
     '<rect width="1" height="1" x="6" y="3" fill="#000"/>\n'
-    '<rect width="1" height="1" x="7" y="3" fill="#000"/>\n'
+    '<rect width="1" height="1" x="8" y="3" fill="#000"/>\n'
     '<rect width="1" height="1" x="9" y="3" fill="#000"/>\n'
-    '<rect width="1" height="1" x="1" y="4" fill="#000"/>\n'
-    '<rect width="1" height="1" x="4" y="4" fill="#000"/>\n'
-    '<rect width="1" height="1" x="5" y="4" fill="#000"/>\n'
-    '<rect width="1" height="1" x="6" y="4" fill="#000"/>\n'
-    '<rect width="1" height="1" x="7" y="4" fill="#000"/>\n'
-    '<rect width="1" height="1" x="9" y="4" fill="#000"/>\n'
-    '<rect width="1" height="1" x="10" y="4" fill="#000"/>\n'
+    '<rect width="1" height="1" x="0" y="4" fill="#000"/>\n'
+    '<rect width="1" height="1" x="8" y="4" fill="#000"/>\n'
+    '<rect width="1" height="1" x="0" y="5" fill="#000"/>\n'
     '<rect width="1" height="1" x="1" y="5" fill="#000"/>\n'
+    '<rect width="1" height="1" x="5" y="5" fill="#000"/>\n'
+    '<rect width="1" height="1" x="7" y="5" fill="#000"/>\n'
     '<rect width="1" height="1" x="9" y="5" fill="#000"/>\n'
-    '<rect width="1" height="1" x="1" y="6" fill="#000"/>\n'
-    '<rect width="1" height="1" x="2" y="6" fill="#000"/>\n'
-    '<rect width="1" height="1" x="6" y="6" fill="#000"/>\n'
-    '<rect width="1" height="1" x="8" y="6" fill="#000"/>\n'
-    '<rect width="1" height="1" x="10" y="6" fill="#000"/>\n'
-    '<rect width="1" height="1" x="1" y="7" fill="#000"/>\n'
+    '<rect width="1" height="1" x="0" y="6" fill="#000"/>\n'
+    '<rect width="1" height="1" x="3" y="6" fill="#000"/>\n'
+    '<rect width="1" height="1" x="4" y="6" fill="#000"/>\n'
+    '<rect width="1" height="1" x="5" y="6" fill="#000"/>\n'
+    '<rect width="1" height="1" x="0" y="7" fill="#000"/>\n'
     '<rect width="1" height="1" x="4" y="7" fill="#000"/>\n'
     '<rect width="1" height="1" x="5" y="7" fill="#000"/>\n'
     '<rect width="1" height="1" x="6" y="7" fill="#000"/>\n'
+    '<rect width="1" height="1" x="9" y="7" fill="#000"/>\n'
+    '<rect width="1" height="1" x="0" y="8" fill="#000"/>\n'
     '<rect width="1" height="1" x="1" y="8" fill="#000"/>\n'
-    '<rect width="1" height="1" x="5" y="8" fill="#000"/>\n'
-    '<rect width="1" height="1" x="6" y="8" fill="#000"/>\n'
-    '<rect width="1" height="1" x="7" y="8" fill="#000"/>\n'
-    '<rect width="1" height="1" x="10" y="8" fill="#000"/>\n'
+    '<rect width="1" height="1" x="2" y="8" fill="#000"/>\n'
+    '<rect width="1" height="1" x="8" y="8" fill="#000"/>\n'
+    '<rect width="1" height="1" x="0" y="9" fill="#000"/>\n'
     '<rect width="1" height="1" x="1" y="9" fill="#000"/>\n'
     '<rect width="1" height="1" x="2" y="9" fill="#000"/>\n'
     '<rect width="1" height="1" x="3" y="9" fill="#000"/>\n'
+    '<rect width="1" height="1" x="4" y="9" fill="#000"/>\n'
+    '<rect width="1" height="1" x="5" y="9" fill="#000"/>\n'
+    '<rect width="1" height="1" x="6" y="9" fill="#000"/>\n'
+    '<rect width="1" height="1" x="7" y="9" fill="#000"/>\n'
+    '<rect width="1" height="1" x="8" y="9" fill="#000"/>\n'
     '<rect width="1" height="1" x="9" y="9" fill="#000"/>\n'
-    '<rect width="1" height="1" x="1" y="10" fill="#000"/>\n'
-    '<rect width="1" height="1" x="2" y="10" fill="#000"/>\n'
-    '<rect width="1" height="1" x="3" y="10" fill="#000"/>\n'
-    '<rect width="1" height="1" x="4" y="10" fill="#000"/>\n'
-    '<rect width="1" height="1" x="5" y="10" fill="#000"/>\n'
-    '<rect width="1" height="1" x="6" y="10" fill="#000"/>\n'
-    '<rect width="1" height="1" x="7" y="10" fill="#000"/>\n'
-    '<rect width="1" height="1" x="8" y="10" fill="#000"/>\n'
-    '<rect width="1" height="1" x="9" y="10" fill="#000"/>\n'
-    '<rect width="1" height="1" x="10" y="10" fill="#000"/>\n'
     '</svg>')
 
 
@@ -178,17 +192,6 @@ class Test_CornerCases(unittest.TestCase):
         m = put.DataMatrix('~' * 50, rect=True).matrix
         self.assertTrue(len(m) == len(m[0]))
 
-    def test_geom_invalid(self):
-        dm = put.DataMatrix('T')
-
-        with self.assertRaises(NotImplementedError):
-            dm.svg(geom='invalid')
-
-    def test_geom_equal_rect(self):
-        dm = put.DataMatrix('T')
-        self.assertTrue(len(dm.matrix) == 10)
-        self.assertEqual(dm.svg(geom='rect'), svg_rect_of_T)
-
     @unittest.skip
     def test_random_messages(self):
         """Test random messages."""
@@ -197,6 +200,29 @@ class Test_CornerCases(unittest.TestCase):
             msg = ''.join(random.choices(ASCII, k=n))
             datamatrix = put.DataMatrix(msg)
             self.assertTrue(len(datamatrix.matrix) > 0)
+
+
+class Test_SVGOutput(unittest.TestCase):
+    """Test SVG output of DataMatrix."""
+
+    def test_geom_invalid(self):
+        """Raise NotImplementedError for invalid geom."""
+        dm = put.DataMatrix('T')
+
+        with self.assertRaises(NotImplementedError):
+            dm.svg(geom='invalid')
+
+    def test_geom_equal_default_v0_2_0(self):
+        """Backward compatibility: Test against the SVG output of v0.2.0."""
+        dm = put.DataMatrix('T')
+        self.assertTrue(len(dm.matrix) == 10)
+        self.assertEqual(dm.svg(), svg_line_of_T_v0_2_0)
+
+    def test_geom_equal_rect(self):
+        """Test geom='rect'"""
+        dm = put.DataMatrix('T')
+        self.assertTrue(len(dm.matrix) == 10)
+        self.assertEqual(dm.svg(geom='rect'), svg_rect_of_T)
 
 
 if __name__ == '__main__':

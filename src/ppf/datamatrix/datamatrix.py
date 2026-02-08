@@ -12,14 +12,14 @@ __all__ = []
 from .utils import export
 
 svg_template = \
-    '<?xml version="1.0" encoding="utf-8" ?>' \
+    '<?xml version="1.0" encoding="utf-8"?>' \
     '<svg baseProfile="tiny" version="1.2" ' \
     'viewBox="{x0} {y0} {vbox_width} {vbox_height}" ' \
     'width="{phys_width}mm" height="{phys_height}mm" ' \
     'style="background-color:{bg}" ' \
     'xmlns="http://www.w3.org/2000/svg" ' \
     'xmlns:ev="http://www.w3.org/2001/xml-events" ' \
-    'xmlns:xlink="http://www.w3.org/1999/xlink" >' \
+    'xmlns:xlink="http://www.w3.org/1999/xlink">' \
     '{matrix}' \
     '</svg>'
 
@@ -58,7 +58,7 @@ class DataMatrix():
         mat = self.matrix
         w = len(mat[0])
 
-        yield '<path d="M1,1.5 '
+        yield '<path d="M0,0.5 '
 
         for line in mat:
             i = 0
@@ -86,8 +86,8 @@ class DataMatrix():
         for i, line in enumerate(mat):
             for j, sym in enumerate(line):
                 if sym == 1:
-                    yield (f'\n<rect width="1" height="1" x="{j + 1}" '
-                           f'y="{i + 1}" fill="{fg}"/>')
+                    yield (f'\n<rect width="1" height="1" x="{j}" '
+                           f'y="{i}" fill="{fg}"/>')
         yield '\n'
 
     def svg(self, fg='#000', bg='#FFF', margin=1, geom='line', cell_size_mm=1):
@@ -113,8 +113,8 @@ class DataMatrix():
         mat = self.matrix
         height = len(mat)
         width = len(mat[0])
-        x0 = 1
-        y0 = 1
+        x0 = 0
+        y0 = 0
 
         # generate datamatrix:
         if geom == 'line':

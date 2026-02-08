@@ -28,7 +28,7 @@ Using the DataMatrix object, you get the SVG source like this:
 
 ```python
 >>> myDataMatrix.svg()  # doctest: +ELLIPSIS
-'<?xml version="1.0" encoding="utf-8" ?>...<path d="M1,1.5 h1m1,0h1m1,...'
+'<?xml version="1.0" encoding="utf-8"?>...<path d="M0,0.5 h1m1,0h1m1,...'
 
 ```
 
@@ -56,10 +56,10 @@ every cell of the matrix as a closed shape, such as a rectangle:
 
 ```python
 >>> print(myDataMatrix.svg(geom='rect'))    # doctest: +ELLIPSIS
-<?xml version="1.0" encoding="utf-8" ?><svg baseProfile="tiny" version="1.2" viewBox="0 0 14 14" width="14mm" height="14mm" style="background-color:#FFF" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink" >
-<rect width="1" height="1" x="1" y="1" fill="#000"/>
-<rect width="1" height="1" x="3" y="1" fill="#000"/>
-<rect width="1" height="1" x="5" y="1" fill="#000"/>
+<?xml version="1.0" encoding="utf-8"?><svg baseProfile="tiny" version="1.2" viewBox="-1 -1 14 14" width="14mm" height="14mm" style="background-color:#FFF" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="1" height="1" x="0" y="0" fill="#000"/>
+<rect width="1" height="1" x="2" y="0" fill="#000"/>
+<rect width="1" height="1" x="4" y="0" fill="#000"/>
 ...
 
 ```
@@ -138,8 +138,33 @@ everyone to adhere to it, just make sure you do as well.
 
 # Change Log
 
-* 0.2:      Fixed RTA problems causing erroneous datamatrices; added capability
-            to specify encoding(s) to use
-* 0.1.2:    Fixed bug in RS correction data for each block
-* 0.1.1:    Fixed bug in datamatrix.ascii encoding of digit pairs
-* 0.1:      Initial port of datamatrix–svg
+### 1.0.0 [in preparation]: SVG updates
+
+* Breaking Changes:
+    * SVG: Add viewBox
+    * SVG: Top-left cell of datamatrix now at (0, 0) instead of (1, 1)
+    * SVG: Tidy-up white space
+* New Features:
+    * SVG: Option to set margin and (physical) cell size
+    * SVG: Option to use 'rect' geometry for, e.g, laser engraving
+
+### 0.2: Choose Your Codec
+
+* New Features:
+    * added capability to specify encoding(s) to use
+* Bug Fixes:
+    * Fixed RTA problems causing erroneous datamatrices
+
+### 0.1.2: Bug Fix RS Correction
+
+* Bug Fixes:
+    * Fixed bug in RS correction data for each block
+
+### 0.1.1: Bug Fix datamatrix.ascii Encoding
+
+* Bug Fixes:
+    * Fixed bug in datamatrix.ascii encoding of digit pairs
+
+### 0.1: Initial Release
+
+* Initial port of datamatrix–svg
