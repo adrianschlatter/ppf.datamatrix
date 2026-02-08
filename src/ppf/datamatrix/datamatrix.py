@@ -54,7 +54,7 @@ class DataMatrix():
     def _repr_svg_(self):
         return self.svg(bg='#000', fg='#FFF')
 
-    def _svg_path_iterator(self):
+    def _svg_path_iterator(self, fg):
         mat = self.matrix
         w = len(mat[0])
 
@@ -78,7 +78,7 @@ class DataMatrix():
             yield 'm'
             yield f'{-w},1'
 
-        yield '" stroke="{fg}" stroke-width="1"/>'
+        yield f'" stroke="{fg}" stroke-width="1"/>'
 
     def _svg_rect_iterator(self, fg, bg):
         mat = self.matrix
@@ -118,7 +118,7 @@ class DataMatrix():
 
         # generate datamatrix:
         if geom == 'line':
-            matrix = ''.join(self._svg_path_iterator())
+            matrix = ''.join(self._svg_path_iterator(fg))
         elif geom == 'rect':
             matrix = ''.join(self._svg_rect_iterator(fg, bg))
         else:
